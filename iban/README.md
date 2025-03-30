@@ -55,7 +55,7 @@ This is a client-side only application. No build process is required.
 This project is intended to be hosted using GitHub Pages.
 
 1.  Ensure the `iban` folder (containing `index.html`, `style.css`, `script.js`, etc.) is present in the branch you configure for GitHub Pages (e.g., `main`).
-2.  In your repository settings under “Pages”, select the source branch (e.g., `main`) and the folder (`/(root)` since `iban-generator` is directly in the root of the `CopyPasteHero.github.io` repository).
+2.  In your repository settings under “Pages”, select the source branch (e.g., `main`) and the folder (`/(root)` since `iban` is directly in the root of the `CopyPasteHero.github.io` repository).
 3.  Ensure your custom domain (`probeer.me`) is correctly configured in the Pages settings and via DNS.
 4.  The generator should become available at `https://probeer.me/iban.
 
