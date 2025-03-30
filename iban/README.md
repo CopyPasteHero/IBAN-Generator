@@ -30,11 +30,11 @@ Try it out at: **[https://probeer.me/iban/](https://probeer.me/iban/)**
 
 This project resides within the `iban-generator` folder of this repository and uses separate files for structure, styling, and logic:
 
-*   `iban-generator/index.html` - Main HTML structure (English UI text).
-*   `iban-generator/style.css` - CSS styling.
-*   `iban-generator/script.js` - JavaScript logic.
-*   `iban-generator/README.md` - This documentation file.
-*   `iban-generator/LICENSE` - The MIT License details.
+*   `iban/index.html` - Main HTML structure (English UI text).
+*   `iban/style.css` - CSS styling.
+*   `iban/script.js` - JavaScript logic.
+*   `iban/README.md` - This documentation file.
+*   `iban/LICENSE` - The MIT License details.
 
 ## Getting Started (Local Development)
 
@@ -46,7 +46,7 @@ This is a client-side only application. No build process is required.
     ```
 2.  Navigate into the project directory:
     ```bash
-    cd CopyPasteHero.github.io/iban-generator
+    cd CopyPasteHero.github.io/iban
     ```
 3.  Open the `index.html` file directly in your web browser. You need an internet connection for the external QRious library and Google Fonts to load.
 
@@ -54,10 +54,10 @@ This is a client-side only application. No build process is required.
 
 This project is intended to be hosted using GitHub Pages.
 
-1.  Ensure the `iban-generator` folder (containing `index.html`, `style.css`, `script.js`, etc.) is present in the branch you configure for GitHub Pages (e.g., `main`).
+1.  Ensure the `iban` folder (containing `index.html`, `style.css`, `script.js`, etc.) is present in the branch you configure for GitHub Pages (e.g., `main`).
 2.  In your repository settings under “Pages”, select the source branch (e.g., `main`) and the folder (`/(root)` since `iban-generator` is directly in the root of the `CopyPasteHero.github.io` repository).
 3.  Ensure your custom domain (`probeer.me`) is correctly configured in the Pages settings and via DNS.
-4.  The generator should become available at `https://probeer.me/iban-generator/.
+4.  The generator should become available at `https://probeer.me/iban.
 
 ## Contributing
 
