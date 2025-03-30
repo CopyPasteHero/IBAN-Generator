@@ -24,11 +24,11 @@ An open-source IBAN generator designed for testing purposes, focusing on usabili
 
 Try it out at: **[https://probeer.me/iban/](https://probeer.me/iban/)**
 
-*(Note: It might take a few minutes for changes to become live after a commit due to GitHub Pages deployment time. Please ensure your repository’s Pages settings are configured correctly to serve from the branch containing the `iban-generator` folder.)*
+*(Note: It might take a few minutes for changes to become live after a commit due to GitHub Pages deployment time. Please ensure your repository’s Pages settings are configured correctly to serve from the branch containing the `iban` folder.)*
 
 ## Project Structure
 
-This project resides within the `iban-generator` folder of this repository and uses separate files for structure, styling, and logic:
+This project resides within the `iban` folder of this repository and uses separate files for structure, styling, and logic:
 
 *   `iban/index.html` - Main HTML structure (English UI text).
 *   `iban/style.css` - CSS styling.
