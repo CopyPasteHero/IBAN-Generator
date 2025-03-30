@@ -1,6 +1,6 @@
 # IBAN Generator
 
-An open-source IBAN generator for testing purposes. Designed with accessibility in mind (striving for EAA/WCAG 2.1 AA compliance). Interface is in English.
+An open-source IBAN generator for testing purposes. Interface is in English.
 
 **Disclaimer:** Generated IBANs are mathematically valid according to the MOD-97 algorithm but **do not correspond to real bank accounts**. Use for testing purposes only.
 
@@ -20,10 +20,6 @@ An open-source IBAN generator for testing purposes. Designed with accessibility 
 *   **Responsive:** Adapts to different screen sizes.
 *   **Print-Friendly:** Basic print stylesheet included to hide unnecessary elements.
 
-## Live Demo
-
-Try it out at: [https://your-username.github.io/your-repo-name/](https://your-username.github.io/your-repo-name/) <!-- ## UPDATE THIS LINK ## -->
-
 ## Project Structure
 
 This project uses separate files for structure, styling, and logic:
@@ -37,10 +33,6 @@ This project uses separate files for structure, styling, and logic:
 ## Getting Started
 
 This is a client-side only application. No build process is required.
-
-### Using the Live Demo
-
-Simply visit the [Live Demo URL](https://your-username.github.io/your-repo-name/) <!-- ## UPDATE THIS LINK ## --> in your browser.
 
 ### Local Development
 
