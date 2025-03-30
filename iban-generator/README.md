@@ -1,6 +1,6 @@
 # IBAN Generator
 
-An open-source IBAN generator for testing purposes. Interface is in English.
+An open-source IBAN generator designed for testing purposes, focusing on usability and a clean interface.
 
 **Disclaimer:** Generated IBANs are mathematically valid according to the MOD-97 algorithm but **do not correspond to real bank accounts**. Use for testing purposes only.
 
@@ -16,37 +16,48 @@ An open-source IBAN generator for testing purposes. Interface is in English.
 *   **SEPA QR Code:** Generates a scannable SEPA QR code (EPC069-12 v2 compliant structure) for single IBANs.
 *   **Download Options:** Download QR code as a PNG image or bulk-generated IBANs as a TXT file.
 *   **Copy to Clipboard:** Easily copy the generated IBAN with feedback.
-*   **Accessible Design:** Strives to meet WCAG 2.1 Level AA guidelines (semantic HTML, ARIA attributes, keyboard navigation, focus management, error handling). Includes `prefers-reduced-motion` support.
+*   **Accessible Design:** Includes semantic HTML, ARIA attributes for screen readers, keyboard navigation, focus management, and clear error handling. Supports `prefers-reduced-motion`.
 *   **Responsive:** Adapts to different screen sizes.
 *   **Print-Friendly:** Basic print stylesheet included to hide unnecessary elements.
 
+## Live Demo
+
+Try it out at: **[https://probeer.me/iban-generator/](https://probeer.me/iban-generator/)**
+
+*(Note: It might take a few minutes for changes to become live after a commit due to GitHub Pages deployment time. Please ensure your repository’s Pages settings are configured correctly to serve from the branch containing the `iban-generator` folder.)*
+
 ## Project Structure
 
-This project uses separate files for structure, styling, and logic:
+This project resides within the `iban-generator` folder of this repository and uses separate files for structure, styling, and logic:
 
-*   `index.html` - Main HTML structure (with ARIA, fieldset/legend). English UI text.
-*   `style.css` - CSS styling (responsive, focus styles, CSS variables, print styles).
-*   `script.js` - JavaScript logic (IBAN generation, UI interaction, QR code generation, error handling, default country detection).
-*   `README.md` - This documentation file.
-*   `LICENSE` - The MIT License details.
+*   `iban-generator/index.html` - Main HTML structure (English UI text).
+*   `iban-generator/style.css` - CSS styling.
+*   `iban-generator/script.js` - JavaScript logic.
+*   `iban-generator/README.md` - This documentation file.
+*   `iban-generator/LICENSE` - The MIT License details.
 
-## Getting Started
+## Getting Started (Local Development)
 
 This is a client-side only application. No build process is required.
 
-### Local Development
-
 1.  **Clone the repository:**
     ```bash
-    # Replace with your actual repository URL
-    git clone https://github.com/your-username/your-repo-name.git
+    git clone https://github.com/CopyPasteHero/CopyPasteHero.github.io.git
     ```
-    (Or download the files manually into a folder).
 2.  Navigate into the project directory:
     ```bash
-    cd your-repo-name
+    cd CopyPasteHero.github.io/iban-generator
     ```
 3.  Open the `index.html` file directly in your web browser. You need an internet connection for the external QRious library and Google Fonts to load.
+
+## Deployment (GitHub Pages)
+
+This project is intended to be hosted using GitHub Pages.
+
+1.  Ensure the `iban-generator` folder (containing `index.html`, `style.css`, `script.js`, etc.) is present in the branch you configure for GitHub Pages (e.g., `main`).
+2.  In your repository settings under “Pages”, select the source branch (e.g., `main`) and the folder (`/(root)` since `iban-generator` is directly in the root of the `CopyPasteHero.github.io` repository).
+3.  Ensure your custom domain (`probeer.me`) is correctly configured in the Pages settings and via DNS.
+4.  The generator should become available at `https://probeer.me/iban-generator/.
 
 ## Contributing
 
@@ -56,7 +67,7 @@ Contributions are welcome! If you find bugs, have suggestions for improvement, o
 2.  **Fork the Repository:** Create your own copy.
 3.  **Create a Branch:** (`git checkout -b feature/your-feature-name`)
 4.  **Make Changes:** Implement your feature or bug fix.
-5.  **Commit Changes:** (`git commit -m 'Add some amazing feature'`)
+5.  **Commit Changes:** (`git commit -m ‘Add some amazing feature’`)
 6.  **Push to Branch:** (`git push origin feature/your-feature-name`)
 7.  **Open a Pull Request:** Submit your changes for review.
 
