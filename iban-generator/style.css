@@ -3,7 +3,7 @@
     --primary-hover: #1d4ed8;
     --secondary-color: #f8fafc;
     --text-color: #1e293b;
-    --text-light: #475569;
+    --text-light: #334155;
     --border-color: #cbd5e1;
     --error-color: #dc2626;
     --success-color: #16a34a;
@@ -380,7 +380,7 @@ noscript p.error-message { /* Style for noscript message (always has class) */
 }
 
 .footer a {
-    color: var(--primary-color);
+    color: var(--primary-hover);
     text-decoration: none;
     font-weight: 500;
 }
@@ -392,6 +392,7 @@ noscript p.error-message { /* Style for noscript message (always has class) */
     margin-top: 0.5rem;
     font-style: italic;
     font-size: 0.8rem;
+    color: var(--text-light);
 }
 
 
