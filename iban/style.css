@@ -9,9 +9,13 @@
     --success-color: #16a34a;
     --focus-ring-color: rgba(37, 99, 235, 0.5);
     --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --transition-duration: 0.2s; /* Define transition duration */
+    --transition-duration: 0.2s;
     --transition-timing: ease-in-out;
     --border-radius: 6px;
+    --background-color: #f1f5f9;
+    --card-background: white;
+    --input-background: white;
+    --qr-background: white;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,56 +30,10 @@
     --success-color: #4ade80;
     --focus-ring-color: rgba(96, 165, 250, 0.5);
     --card-shadow: 0 4px 6px -1px rgb(255 255 255 / 0.05), 0 2px 4px -2px rgb(255 255 255 / 0.05);
-  }
-
-  .container,
-  .card {
-    background-color: #1e293b;
-  }
-
-  .subtitle {
-    color: var(--text-light);
-  }
-
-  label,
-  h1,
-  h2,
-  legend.form-section-heading {
-    color: var(--text-color);
-  }
-
-  input,
-  select,
-  textarea {
-    background-color: #0f172a;
-    color: var(--text-color);
-    border-color: var(--border-color);
-  }
-
-  body {
-    background-color: #0f172a;
-  }
-
-  .card {
-    background-color: #1e293b;
-  }
-
-  input,
-  select,
-  textarea {
-    background-color: #0f172a;
-    color: var(--text-color);
-    border-color: var(--border-color);
-  }
-
-  .iban-display,
-  .qr-container {
-    background-color: #1e293b;
-    border-color: var(--border-color);
-  }
-
-  #qr-code {
-    background-color: #0f172a;
+    --background-color: #0f172a;
+    --card-background: #1e293b;
+    --input-background: #0f172a;
+    --qr-background: #0f172a;
   }
 }
 
@@ -94,7 +52,7 @@ body {
     font-size: 16px;
     line-height: 1.6;
     color: var(--text-color);
-    background-color: #f1f5f9;
+    background-color: var(--background-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     padding: 1rem;
@@ -111,14 +69,11 @@ header {
     margin-bottom: 2.5rem;
 }
 
-/* Language selector container rule removed */
-
 h1 {
     font-size: 2.25rem;
     font-weight: 700;
     color: var(--text-color);
     margin-bottom: 0.5rem;
-    /* No margin-top needed as lang selector is gone */
 }
 
 .subtitle {
@@ -128,7 +83,7 @@ h1 {
 }
 
 .card {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: var(--border-radius);
     box-shadow: var(--card-shadow);
     padding: 2rem;
@@ -136,12 +91,12 @@ h1 {
     border: 1px solid var(--border-color);
     transition: transform var(--transition-duration) var(--transition-timing), box-shadow var(--transition-duration) var(--transition-timing);
 }
+
 .card:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-/* Reset fieldset default styling */
 fieldset {
     border: none;
     padding: 0;
@@ -162,12 +117,15 @@ h2.form-section-heading {
 .form-group {
     margin-bottom: 1.5rem;
 }
+
 fieldset .form-group:not(:last-child) {
      margin-bottom: 1.5rem;
 }
+
 fieldset .form-group:last-of-type:not(.button-group) {
     margin-bottom: 0;
 }
+
 fieldset .button-group {
      margin-top: 1.5rem;
      margin-bottom: 0;
@@ -178,11 +136,12 @@ label {
     font-weight: 500;
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
+    color: var(--text-color);
 }
 
 select, option {
     color: var(--text-color);
-    background-color: #fff;
+    background-color: var(--input-background);
 }
 
 select, input[type="text"], input[type="number"], textarea {
@@ -192,7 +151,8 @@ select, input[type="text"], input[type="number"], textarea {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     font-family: inherit;
-    background-color: #fff;
+    background-color: var(--input-background);
+    color: var(--text-color);
     transition: border-color var(--transition-duration) var(--transition-timing), box-shadow var(--transition-duration) var(--transition-timing);
 }
 
@@ -200,13 +160,11 @@ textarea#bulk-ibans {
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.95rem;
     line-height: 1.5;
-    background-color: #f8fafc;
+    background-color: var(--input-background);
     border: 1px solid var(--border-color);
     overflow-y: auto;
 }
 
-
-/* Base button reset/defaults */
 button {
     border: none;
     background: none;
@@ -216,6 +174,7 @@ button {
     padding: 0;
     appearance: none;
 }
+
 .btn {
     display: inline-block;
     font-weight: 500;
@@ -230,6 +189,7 @@ button {
     color: white;
     border: 1px solid transparent;
 }
+
 .btn-primary:hover {
     background-color: var(--primary-hover);
 }
@@ -239,38 +199,36 @@ button {
     color: var(--text-color);
     border: 1px solid var(--border-color);
 }
+
 .btn-secondary:hover {
     background-color: #e2e8f0;
 }
 
-/* Focus states */
 select:focus, input:focus, textarea:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px var(--focus-ring-color);
 }
-/* Focus visible specifically for buttons (keyboard nav) */
+
 .btn:focus-visible,
-#copy-btn:focus-visible { /* Removed language-select focus */
+#copy-btn:focus-visible {
      outline: 3px solid var(--focus-ring-color);
      outline-offset: 2px;
 }
 
-
-/* Styling for invalid fields */
 select[aria-invalid="true"],
 input[aria-invalid="true"],
 textarea[aria-invalid="true"] {
     border-color: var(--error-color);
     box-shadow: 0 0 0 1px var(--error-color);
 }
+
 select[aria-invalid="true"]:focus,
 input[aria-invalid="true"]:focus,
 textarea[aria-invalid="true"]:focus {
      border-color: var(--error-color);
      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5);
 }
-
 
 .help-text {
     font-size: 0.875rem;
@@ -284,9 +242,9 @@ textarea[aria-invalid="true"]:focus {
     margin-top: 0.5rem;
     font-weight: 500;
     display: block;
-    padding: 0; /* Reset padding */
-    border: none; /* Reset border */
-    background-color: transparent; /* Reset background */
+    padding: 0;
+    border: none;
+    background-color: transparent;
     opacity: 0;
     max-height: 0;
     overflow: hidden;
@@ -295,8 +253,9 @@ textarea[aria-invalid="true"]:focus {
                 padding var(--transition-duration) var(--transition-timing),
                 margin-bottom var(--transition-duration) var(--transition-timing);
 }
-.error-message.has-error, /* Style for active errors (added by JS) */
-noscript p.error-message { /* Style for noscript message (always has class) */
+
+.error-message.has-error,
+noscript p.error-message {
     margin-bottom: 1rem;
     background-color: rgba(220, 38, 38, 0.05);
     padding: 0.5rem 1rem;
@@ -306,16 +265,15 @@ noscript p.error-message { /* Style for noscript message (always has class) */
     max-height: 10em;
 }
 
-
 .button-group {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
 }
+
 .button-group .btn {
      flex-grow: 1;
 }
-
 
 .hidden {
     display: none !important;
@@ -340,6 +298,7 @@ noscript p.error-message { /* Style for noscript message (always has class) */
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 1rem;
+    color: var(--text-color);
 }
 
 .iban-result {
@@ -365,6 +324,7 @@ noscript p.error-message { /* Style for noscript message (always has class) */
     word-break: break-all;
     margin-right: 1rem;
     flex-grow: 1;
+    color: var(--text-color);
 }
 
 #copy-btn {
@@ -378,6 +338,7 @@ noscript p.error-message { /* Style for noscript message (always has class) */
 #copy-btn:hover {
     color: var(--primary-color);
 }
+
 #copy-btn svg {
      display: block;
 }
@@ -393,7 +354,6 @@ noscript p.error-message { /* Style for noscript message (always has class) */
     border: none;
 }
 
-
 .qr-container {
     display: flex;
     flex-direction: column;
@@ -407,17 +367,18 @@ noscript p.error-message { /* Style for noscript message (always has class) */
 
 .qr-container h3 {
      align-self: flex-start;
+     color: var(--text-color);
 }
-
 
 #qr-code {
     margin-bottom: 1rem;
-    background-color: white;
+    background-color: var(--qr-background);
     padding: 1rem;
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
     line-height: 0;
 }
+
 #qr-code canvas {
     display: block;
     max-width: 100%;
@@ -427,6 +388,7 @@ noscript p.error-message { /* Style for noscript message (always has class) */
 #qr-help {
     text-align: center;
     margin-bottom: 1rem;
+    color: var(--text-light);
 }
 
 #download-qr, #download-bulk {
@@ -454,6 +416,7 @@ noscript p.error-message { /* Style for noscript message (always has class) */
     text-decoration: none;
     font-weight: 500;
 }
+
 .footer a:hover, .footer a:focus {
     text-decoration: underline;
 }
@@ -465,42 +428,108 @@ noscript p.error-message { /* Style for noscript message (always has class) */
     color: var(--text-light);
 }
 
-
-/* Reduced Motion Preferences */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+  
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-   .card:hover { transform: none; }
+  
+  .card:hover { 
+    transform: none; 
+  }
 }
 
-
-/* Print Styles */
 @media print {
-  body { background-color: #fff; color: #000; font-size: 12pt; }
-  .container { max-width: 100%; margin: 0; padding: 0; }
-  header, footer, .button-group, #copy-btn, #download-qr, #download-bulk, .qr-container, #copy-message, .error-message, noscript p { display: none !important; }
-  .card { box-shadow: none; border: 1px solid #ccc; padding: 1rem; margin: 0; page-break-inside: avoid; }
-  a { text-decoration: none; color: #000; }
-  a[href^="http"]::after { content: " (" attr(href) ") "; font-size: 9pt; }
-  #iban-result { font-size: 12pt; letter-spacing: normal; word-spacing: normal; }
-  textarea#bulk-ibans { font-size: 10pt; background-color: #fff; border: 1px solid #ccc; height: auto; overflow: visible; white-space: pre-wrap; }
+  body { 
+    background-color: #fff; 
+    color: #000; 
+    font-size: 12pt; 
+  }
+  
+  .container { 
+    max-width: 100%; 
+    margin: 0; 
+    padding: 0; 
+  }
+  
+  header, footer, .button-group, #copy-btn, #download-qr, #download-bulk, .qr-container, #copy-message, .error-message, noscript p { 
+    display: none !important; 
+  }
+  
+  .card { 
+    box-shadow: none; 
+    border: 1px solid #ccc; 
+    padding: 1rem; 
+    margin: 0; 
+    page-break-inside: avoid; 
+  }
+  
+  a { 
+    text-decoration: none; 
+    color: #000; 
+  }
+  
+  a[href^="http"]::after { 
+    content: " (" attr(href) ") "; 
+    font-size: 9pt; 
+  }
+  
+  #iban-result { 
+    font-size: 12pt; 
+    letter-spacing: normal; 
+    word-spacing: normal; 
+  }
+  
+  textarea#bulk-ibans { 
+    font-size: 10pt; 
+    background-color: #fff; 
+    border: 1px solid #ccc; 
+    height: auto; 
+    overflow: visible; 
+    white-space: pre-wrap; 
+  }
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 600px) {
-    h1 { font-size: 1.8rem; }
-    .subtitle { font-size: 1rem; }
-    .card { padding: 1.5rem; }
-     .card:hover { transform: none; box-shadow: var(--card-shadow); }
-    #iban-result { font-size: 1rem; }
-    .button-group .btn { width: 100%; flex-grow: 0; }
-    .iban-display { flex-direction: column; align-items: flex-start; }
-     #copy-btn { margin-top: 0.5rem; align-self: flex-end; }
+    h1 { 
+      font-size: 1.8rem; 
+    }
+    
+    .subtitle { 
+      font-size: 1rem; 
+    }
+    
+    .card { 
+      padding: 1.5rem; 
+    }
+    
+    .card:hover { 
+      transform: none; 
+      box-shadow: var(--card-shadow); 
+    }
+    
+    #iban-result { 
+      font-size: 1rem; 
+    }
+    
+    .button-group .btn { 
+      width: 100%; 
+      flex-grow: 0; 
+    }
+    
+    .iban-display { 
+      flex-direction: column; 
+      align-items: flex-start; 
+    }
+    
+    #copy-btn { 
+      margin-top: 0.5rem; 
+      align-self: flex-end; 
+    }
 }
