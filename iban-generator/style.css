@@ -115,6 +115,11 @@ label {
     font-size: 0.95rem;
 }
 
+select, option {
+    color: var(--text-color);
+    background-color: #fff;
+}
+
 select, input[type="text"], input[type="number"], textarea {
     width: 100%;
     padding: 0.75rem 1rem;
