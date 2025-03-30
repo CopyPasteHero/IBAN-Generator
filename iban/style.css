@@ -14,6 +14,47 @@
     --border-radius: 6px;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #3b82f6;
+    --primary-hover: #60a5fa;
+    --secondary-color: #1e293b;
+    --text-color: #f8fafc;
+    --text-light: #94a3b8;
+    --border-color: #334155;
+    --error-color: #f87171;
+    --success-color: #4ade80;
+    --focus-ring-color: rgba(96, 165, 250, 0.5);
+    --card-shadow: 0 4px 6px -1px rgb(255 255 255 / 0.05), 0 2px 4px -2px rgb(255 255 255 / 0.05);
+  }
+
+  body {
+    background-color: #0f172a;
+  }
+
+  .card {
+    background-color: #1e293b;
+  }
+
+  input,
+  select,
+  textarea {
+    background-color: #0f172a;
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+
+  .iban-display,
+  .qr-container {
+    background-color: #1e293b;
+    border-color: var(--border-color);
+  }
+
+  #qr-code {
+    background-color: #0f172a;
+  }
+}
+
 * {
     margin: 0;
     padding: 0;
