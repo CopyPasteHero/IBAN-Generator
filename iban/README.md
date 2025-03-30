@@ -22,7 +22,7 @@ An open-source IBAN generator designed for testing purposes, focusing on usabili
 
 ## Live Demo
 
-Try it out at: **[https://probeer.me/iban-generator/](https://probeer.me/iban-generator/)**
+Try it out at: **[https://probeer.me/iban/](https://probeer.me/iban/)**
 
 *(Note: It might take a few minutes for changes to become live after a commit due to GitHub Pages deployment time. Please ensure your repository’s Pages settings are configured correctly to serve from the branch containing the `iban-generator` folder.)*
 
