@@ -1,1 +1,1 @@
-<meta http-equiv=“refresh” content=“0; url=/iban-generator/“>
+<meta http-equiv=“refresh” content=“0; url=/iban“>
