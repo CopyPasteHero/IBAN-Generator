@@ -1,7 +1,9 @@
 ---
-layout: page
-title: Welcome to Probeer.me
+layout: clean
+title: 
 ---
+
+## Welcome to Probeer.me
 
 Oops! This page is currently as empty as a programmer’s social calendar.
 
