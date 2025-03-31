@@ -1,272 +1,368 @@
-import React, { useState, useEffect, useCallback } from 'react'; 
+document.addEventListener('DOMContentLoaded', function() {
+    // --- DOM Elements ---
+    const ibanForm = document.getElementById('iban-form');
+    const countrySelect = document.getElementById('country');
+    const bankContainer = document.getElementById('bank-container');
+    const bankSelect = document.getElementById('bank');
+    const quantityInput = document.getElementById('quantity');
 
-const IBANGenerator = () => {
-  const [selectedCountry, setSelectedCountry] = useState('NL');
-  const [selectedBank, setSelectedBank] = useState('');
-  const [quantity, setQuantity] = useState(1);
-  const [generatedIban, setGeneratedIban] = useState('');
-  const [showResults, setShowResults] = useState(false);
-  const [isSingleResult, setIsSingleResult] = useState(true);
-  const [bulkIbans, setBulkIbans] = useState([]);
-  const [copyMessage, setCopyMessage] = useState('');
-  
-  // Country data based on the provided code.js file
-  const countries = {
-    NL: "Netherlands", DE: "Germany", BE: "Belgium", FR: "France", ES: "Spain", IT: "Italy",
-    AD: "Andorra", AE: "United Arab Emirates", AL: "Albania", AT: "Austria", AZ: "Azerbaijan",
-    BA: "Bosnia and Herzegovina", BG: "Bulgaria", BH: "Bahrain", CH: "Switzerland", CY: "Cyprus",
-    CZ: "Czech Republic", DK: "Denmark", EE: "Estonia", FI: "Finland", GB: "United Kingdom",
-    GR: "Greece", HR: "Croatia", HU: "Hungary", IE: "Ireland", IS: "Iceland", LI: "Liechtenstein",
-    LT: "Lithuania", LU: "Luxembourg", LV: "Latvia", MC: "Monaco", MT: "Malta", NO: "Norway",
-    PL: "Poland", PT: "Portugal", RO: "Romania", SE: "Sweden", SI: "Slovenia", SK: "Slovakia",
-    SM: "San Marino", TR: "Turkey", UA: "Ukraine"
-  };
+    // Result Sections
+    const resultSection = document.getElementById('result-section');
+    const singleResultContainer = document.getElementById('single-result-container');
+    const bulkResultContainer = document.getElementById('bulk-result-container');
 
-  // Bank data for the original supported countries
-  const bankData = {
-    NL: [
-      { id: 'ABNA', name: 'ABN AMRO' },
-      { id: 'INGB', name: 'ING' },
-      { id: 'RABO', name: 'Rabobank' },
-      { id: 'SNSB', name: 'SNS Bank' },
-      { id: 'ASNB', name: 'ASN Bank' },
-      { id: 'RBRB', name: 'RegioBank' },
-      { id: 'KNAB', name: 'Knab' },
-      { id: 'BUNQ', name: 'Bunq' },
-      { id: 'TRIO', name: 'Triodos Bank' },
-      { id: 'FVLB', name: 'Van Lanschot' }
-    ],
-    DE: [
-      { id: 'DEUTDEFF', name: 'Deutsche Bank' },
-      { id: 'COBADEFF', name: 'Commerzbank' },
-      { id: 'PBNKDEFF', name: 'Postbank' },
-      { id: 'GENODEFF', name: 'DZ Bank' }
-    ],
-    BE: [
-      { id: 'GEBABEBB', name: 'BNP Paribas Fortis' },
-      { id: 'BBRUBEBB', name: 'ING Belgium' },
-      { id: 'KREDBEBB', name: 'KBC Bank' },
-      { id: 'GKCCBEBB', name: 'Belfius Bank' }
-    ],
-    FR: [
-      { id: 'BNPAFRPP', name: 'BNP Paribas' },
-      { id: 'SOGEFRPP', name: 'Société Générale' },
-      { id: 'CRLYFRPP', name: 'Crédit Lyonnais (LCL)' },
-      { id: 'CEPAFRPP', name: 'Caisse d\'Epargne' }
-    ],
-    ES: [
-      { id: 'BSCHESMM', name: 'Banco Santander' },
-      { id: 'BBVAESMM', name: 'BBVA' },
-      { id: 'CAIXESBB', name: 'CaixaBank' },
-      { id: 'SABBESBB', name: 'Banco Sabadell' }
-    ],
-    IT: [
-      { id: 'UNCRITMM', name: 'UniCredit' },
-      { id: 'BCITITMM', name: 'Intesa Sanpaolo' },
-      { id: 'BNLIITRR', name: 'BNL' },
-      { id: 'MPSITIT1', name: 'Monte dei Paschi' }
-    ]
-  };
+    // Single Result Elements
+    const ibanResultSpan = document.getElementById('iban-result');
+    const copyBtn = document.getElementById('copy-btn');
+    const copyMessage = document.getElementById('copy-message');
+    const qrContainer = document.getElementById('qr-container');
+    const qrCodeDiv = document.getElementById('qr-code');
+    const downloadQrBtn = document.getElementById('download-qr');
 
-  useEffect(() => {
-    // Update the selected bank when country changes
-    if (bankData[selectedCountry] && bankData[selectedCountry].length > 0) {
-      setSelectedBank(bankData[selectedCountry][0].id);
-    } else {
-      setSelectedBank('');
-    }
-  }, [selectedCountry]);
+    // Bulk Result Elements
+    const bulkCountSpan = document.getElementById('bulk-count');
+    const bulkIbansTextarea = document.getElementById('bulk-ibans');
+    const downloadBulkBtn = document.getElementById('download-bulk');
+    const bulkHeading = document.getElementById('bulk-heading');
 
-  const handleCountryChange = (e) => {
-    setSelectedCountry(e.target.value);
-    setShowResults(false);
-  };
+    // Error Message Elements
+    const countryError = document.getElementById('country-error');
+    const bankError = document.getElementById('bank-error');
+    const quantityError = document.getElementById('quantity-error');
 
-  const handleBankChange = (e) => {
-    setSelectedBank(e.target.value);
-  };
+    // --- Configuration ---
+    let qr = null; // QRious instance
 
-  const handleQuantityChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    setQuantity(isNaN(value) ? 1 : Math.min(Math.max(value, 1), 100));
-  };
-
-  const handleGenerate = (e) => {
-    e.preventDefault();
-    
-    // Simple mock of IBAN generation
-    const mockIbanGenerate = (country) => {
-      const countryCode = country;
-      const checkDigits = Math.floor(10 + Math.random() * 90); // Random 2-digit number
-      
-      // Different length for different countries
-      const lengths = {
-        NL: 14, DE: 18, BE: 12, FR: 23, ES: 20, IT: 23, 
-        AT: 16, PL: 24, PT: 21, CH: 17, LU: 16, DK: 14,
-        FI: 14, IE: 18, SE: 20, GR: 23
-      };
-      
-      const length = lengths[country] || 16; // Default length if country not specified
-      let accountNumber = '';
-      
-      for (let i = 0; i < length; i++) {
-        accountNumber += Math.floor(Math.random() * 10);
-      }
-      
-      return `${countryCode}${checkDigits}${accountNumber}`;
+    const IBAN_SPECS = {
+        NL: { length: 18, bankCodeLength: 4, accountLength: 10 },
+        DE: { length: 22, bankCodeLength: 8, accountLength: 10 },
+        BE: { length: 16, bankCodeLength: 3, accountLength: 7, nationalCheckLength: 2 },
+        FR: { length: 27, bankCodeLength: 5, branchCodeLength: 5, accountLength: 11, nationalCheckLength: 2 },
+        ES: { length: 24, bankCodeLength: 4, branchCodeLength: 4, nationalCheckLength: 2, accountLength: 10 },
+        IT: { length: 27, nationalCheckLength: 1, bankCodeLength: 5, branchCodeLength: 5, accountLength: 12 }
     };
-    
-    if (quantity === 1) {
-      const iban = mockIbanGenerate(selectedCountry);
-      setGeneratedIban(iban);
-      setIsSingleResult(true);
-    } else {
-      const ibans = [];
-      for (let i = 0; i < quantity; i++) {
-        ibans.push(mockIbanGenerate(selectedCountry));
-      }
-      setBulkIbans(ibans);
-      setIsSingleResult(false);
+
+    // English names for countries and banks
+    const COUNTRY_NAMES = { NL: "Netherlands", DE: "Germany", BE: "Belgium", FR: "France", ES: "Spain", IT: "Italy" };
+    const BANK_DATA = { // Now includes English name directly
+        NL: {
+            ABNA: { name: 'ABN AMRO', code: 'ABNA' }, INGB: { name: 'ING', code: 'INGB' }, RABO: { name: 'Rabobank', code: 'RABO' }, SNSB: { name: 'SNS Bank', code: 'SNSB' },
+            ASNB: { name: 'ASN Bank', code: 'ASNB' }, RBRB: { name: 'RegioBank', code: 'RBRB' }, KNAB: { name: 'Knab', code: 'KNAB' }, BUNQ: { name: 'Bunq', code: 'BUNQ' },
+            TRIO: { name: 'Triodos Bank', code: 'TRIO' }, FVLB: { name: 'Van Lanschot', code: 'FVLB' }
+        },
+        DE: {
+            DEUTDEFF: { name: 'Deutsche Bank', code: '50070010' }, COBADEFF: { name: 'Commerzbank', code: '50040000' },
+            PBNKDEFF: { name: 'Postbank', code: '50010060' }, GENODEFF: { name: 'DZ Bank', code: '50060400' }
+        },
+        BE: {
+            GEBABEBB: { name: 'BNP Paribas Fortis', code: '001' }, BBRUBEBB: { name: 'ING Belgium', code: '310' },
+            KREDBEBB: { name: 'KBC Bank', code: '734' }, GKCCBEBB: { name: 'Belfius Bank', code: '068' }
+        },
+        FR: {
+            BNPAFRPP: { name: 'BNP Paribas', code: '30004' }, SOGEFRPP: { name: 'Société Générale', code: '30003' },
+            CRLYFRPP: { name: 'Crédit Lyonnais (LCL)', code: '30002' }, CEPAFRPP: { name: 'Caisse d\'Epargne', code: '11306' }
+        },
+        ES: {
+            BSCHESMM: { name: 'Banco Santander', code: '0049' }, BBVAESMM: { name: 'BBVA', code: '0182' },
+            CAIXESBB: { name: 'CaixaBank', code: '2100' }, SABBESBB: { name: 'Banco Sabadell', code: '0081' }
+        },
+        IT: {
+            UNCRITMM: { name: 'UniCredit', code: '02008' }, BCITITMM: { name: 'Intesa Sanpaolo', code: '03069' },
+            BNLIITRR: { name: 'BNL', code: '01005' }, MPSITIT1: { name: 'Monte dei Paschi', code: '01030' }
+        }
+    };
+
+    /**
+     * Gets the likely default country code based on browser language.
+     * @returns {string} A 2-letter country code (e.g., 'NL', 'DE') or 'NL' as fallback.
+     */
+    function getSuggestedCountry() {
+        try {
+            const lang = navigator.language.toLowerCase(); // e.g., 'nl-nl', 'de', 'en-gb'
+            const baseLang = lang.split('-')[0]; // e.g., 'nl', 'de', 'en'
+
+            if (baseLang === 'nl' && IBAN_SPECS['NL']) return 'NL';
+            if (baseLang === 'de' && IBAN_SPECS['DE']) return 'DE';
+            if (baseLang === 'fr') { // French can be BE or FR
+                 if ((lang.includes('be') || lang.includes('bru')) && IBAN_SPECS['BE']) return 'BE'; // Prioritize Belgian French if BE supported
+                 if (IBAN_SPECS['FR']) return 'FR'; // Otherwise default to France
+                 if (IBAN_SPECS['BE']) return 'BE'; // Or Belgium if FR not supported but BE is
+            }
+            if (baseLang === 'es' && IBAN_SPECS['ES']) return 'ES';
+            if (baseLang === 'it' && IBAN_SPECS['IT']) return 'IT';
+            // Add more language hints if needed
+
+        } catch (e) {
+            console.warn("Could not access navigator.language:", e);
+        }
+        return 'NL'; // Default fallback (Netherlands)
     }
-    
-    setShowResults(true);
-  };
 
-  const formatIBAN = (iban) => {
-    return iban.replace(/(.{4})/g, "$1 ").trim();
-  };
+    /** Populates the country select dropdown. */
+    function populateCountrySelect() {
+        countrySelect.innerHTML = ''; // Clear existing
+        for (const countryCode in IBAN_SPECS) {
+            const option = document.createElement('option');
+            option.value = countryCode;
+            option.textContent = COUNTRY_NAMES[countryCode] || countryCode; // Use English name or code
+            countrySelect.appendChild(option);
+        }
+    }
 
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(generatedIban)
-      .then(() => {
-        setCopyMessage("Copied!");
-        setTimeout(() => setCopyMessage(""), 2000);
-      })
-      .catch(() => {
-        setCopyMessage("Copy failed");
-      });
-  };
+    /** Updates the bank select dropdown based on the selected country. */
+    function updateBankSelector() {
+        const selectedCountry = countrySelect.value;
+        const banksForCountryData = BANK_DATA[selectedCountry];
+        const helpTextEl = document.getElementById('bank-help');
 
-  const sortedCountries = Object.entries(countries).sort((a, b) => a[1].localeCompare(b[1]));
+        bankSelect.innerHTML = ''; // Clear previous options
 
-  return (
-    <div className="bg-slate-900 text-slate-100 min-h-screen p-4">
-      <div className="max-w-md mx-auto">
-        <header className="text-center mb-6">
-          <h1 className="text-2xl font-bold mb-2">IBAN Generator</h1>
-          <p className="text-slate-400">Generate secure, valid IBAN numbers for testing purposes</p>
-        </header>
+        if (banksForCountryData && Object.keys(banksForCountryData).length > 0) {
+            let isFirstBank = true;
+            for (const bic in banksForCountryData) {
+                const bank = banksForCountryData[bic];
+                const option = document.createElement('option');
+                option.value = bic; // Use BIC as value
+                option.textContent = bank.name || bic; // Use English name or BIC
+                bankSelect.appendChild(option);
+                if (isFirstBank) {
+                     option.selected = true;
+                     isFirstBank = false;
+                }
+            }
+            bankContainer.classList.remove('hidden');
+            bankSelect.disabled = false;
+            if(helpTextEl) helpTextEl.textContent = `Optional: Select a bank for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}.`;
 
-        <div className="bg-slate-800 rounded-lg p-6 shadow-lg mb-6">
-          <form onSubmit={handleGenerate}>
-            <fieldset className="mb-6 border-b border-slate-700 pb-4">
-              <legend className="text-xl font-semibold mb-4">Generator Settings</legend>
+        } else {
+            bankContainer.classList.add('hidden');
+            bankSelect.disabled = true;
+            if(helpTextEl) helpTextEl.textContent = `No specific banks available for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}.`;
+        }
+        clearError(bankSelect, bankError);
+    }
 
-              <div className="mb-4">
-                <label htmlFor="country" className="block mb-2 font-medium">Country:</label>
-                <select 
-                  id="country" 
-                  className="w-full p-3 bg-slate-900 border border-slate-700 rounded text-white"
-                  value={selectedCountry}
-                  onChange={handleCountryChange}
-                >
-                  {sortedCountries.map(([code, name]) => (
-                    <option key={code} value={code}>{name}</option>
-                  ))}
-                </select>
-                <p className="text-sm text-slate-400 mt-1">Select the country for the IBAN.</p>
-              </div>
 
-              {bankData[selectedCountry] && (
-                <div className="mb-4">
-                  <label htmlFor="bank" className="block mb-2 font-medium">Bank:</label>
-                  <select 
-                    id="bank" 
-                    className="w-full p-3 bg-slate-900 border border-slate-700 rounded text-white"
-                    value={selectedBank}
-                    onChange={handleBankChange}
-                  >
-                    {bankData[selectedCountry].map(bank => (
-                      <option key={bank.id} value={bank.id}>{bank.name}</option>
-                    ))}
-                  </select>
-                  <p className="text-sm text-slate-400 mt-1">Optional: Select a bank for the chosen country.</p>
-                </div>
-              )}
+    // --- Event Listeners ---
+    countrySelect.addEventListener('change', handleCountryChange);
+    ibanForm.addEventListener('submit', handleFormSubmit);
+    copyBtn.addEventListener('click', handleCopyClick);
+    downloadQrBtn.addEventListener('click', handleDownloadQrClick);
+    downloadBulkBtn.addEventListener('click', handleDownloadBulkClick);
 
-              <div className="mb-4">
-                <label htmlFor="quantity" className="block mb-2 font-medium">Number of IBANs to generate:</label>
-                <input 
-                  type="number" 
-                  id="quantity" 
-                  className="w-full p-3 bg-slate-900 border border-slate-700 rounded text-white"
-                  value={quantity}
-                  onChange={handleQuantityChange}
-                  min="1"
-                  max="100"
-                />
-                <p className="text-sm text-slate-400 mt-1">Enter a number between 1 and 100.</p>
-              </div>
+    // --- Initialization ---
+    populateCountrySelect(); // Populate countries first
+    countrySelect.value = getSuggestedCountry(); // Set default country based on browser lang hint
+    updateBankSelector(); // Update banks based on the now selected default country
 
-              <div className="mt-6">
-                <button 
-                  type="submit" 
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded font-medium"
-                >
-                  Generate IBAN(s)
-                </button>
-              </div>
-            </fieldset>
-          </form>
 
-          {showResults && (
-            <div className="mt-6 pt-4 border-t border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">Generated Results</h2>
-              
-              {isSingleResult ? (
-                <div>
-                  <h3 className="text-lg font-medium mb-2">Generated IBAN</h3>
-                  <div className="bg-slate-900 p-3 rounded flex items-center justify-between mb-2">
-                    <span className="font-mono text-lg">{formatIBAN(generatedIban)}</span>
-                    <button 
-                      onClick={handleCopyClick}
-                      className="ml-2 p-2 hover:bg-slate-700 rounded"
-                      title="Copy to clipboard"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                      </svg>
-                    </button>
-                  </div>
-                  {copyMessage && <p className="text-green-500 text-sm text-right">{copyMessage}</p>}
-                </div>
-              ) : (
-                <div>
-                  <h3 className="text-lg font-medium mb-2">Generated IBANs ({bulkIbans.length})</h3>
-                  <div className="mb-4">
-                    <label htmlFor="bulk-ibans" className="block mb-2">Results:</label>
-                    <textarea 
-                      id="bulk-ibans" 
-                      className="w-full p-3 bg-slate-900 border border-slate-700 rounded text-white font-mono h-40"
-                      value={bulkIbans.join('\n')}
-                      readOnly
-                    />
-                    <p className="text-sm text-slate-400 mt-1">Generated IBANs, one per line.</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+    // --- Functions ---
 
-        <footer className="text-center text-slate-400 text-sm">
-          <p>Open source IBAN generator | <a href="https://github.com/CopyPasteHero/CopyPasteHero.github.io/tree/main/iban" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">GitHub</a></p>
-          <p className="mt-1 italic">Note: Generated IBANs are mathematically valid but do not correspond to real bank accounts. Use for testing purposes only.</p>
-        </footer>
-      </div>
-    </div>
-  );
-};
+    /** Handles country selection change. */
+    function handleCountryChange() {
+        updateBankSelector();
+        clearResults();
+        clearAllErrors();
+    }
 
-export default IBANGenerator;
+    /** Handles form submission. */
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        clearResults();
+        clearAllErrors();
+
+        const country = countrySelect.value;
+        const quantity = parseInt(quantityInput.value, 10);
+        const bankCodeInfo = getSelectedBankInfo();
+
+        if (isNaN(quantity) || quantity < 1 || quantity > 100) {
+             showError(quantityInput, quantityError, "Please enter a number between 1 and 100."); // Hardcoded English error
+             quantityInput.focus();
+             return;
+        }
+
+        resultSection.classList.remove('hidden');
+        if (quantity === 1) {
+            generateSingleIBAN(country, bankCodeInfo);
+        } else {
+            generateBulkIBANs(country, bankCodeInfo, quantity);
+        }
+
+        if (!singleResultContainer.classList.contains('hidden') || !bulkResultContainer.classList.contains('hidden')) {
+             resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    /** Generates and displays a single IBAN result. */
+    function generateSingleIBAN(country, bankCodeInfo) {
+        const iban = generateIBAN(country, bankCodeInfo);
+        if (iban) {
+            ibanResultSpan.textContent = formatIBAN(iban);
+            bulkResultContainer.classList.add('hidden');
+            singleResultContainer.classList.remove('hidden');
+            requestAnimationFrame(() => generateQRCode(iban));
+            copyMessage.textContent = '';
+        } else {
+             singleResultContainer.classList.add('hidden');
+             qrContainer.classList.add('hidden');
+        }
+    }
+
+    /** Generates and displays bulk IBAN results. */
+    function generateBulkIBANs(country, bankCodeInfo, quantity) {
+        let ibans = [];
+        const useSpecificBank = !!bankSelect.value && !bankSelect.disabled;
+
+        for (let i = 0; i < quantity; i++) {
+            const currentBankInfo = useSpecificBank ? bankCodeInfo : null;
+            const iban = generateIBAN(country, currentBankInfo);
+            if (iban) { ibans.push(iban); }
+        }
+
+        if (ibans.length > 0) {
+            bulkHeading.textContent = `Generated IBANs (${ibans.length})`; // English heading
+            bulkCountSpan.textContent = ibans.length;
+            bulkIbansTextarea.value = ibans.join('\n');
+            singleResultContainer.classList.add('hidden');
+            bulkResultContainer.classList.remove('hidden');
+        } else {
+             bulkResultContainer.classList.add('hidden');
+        }
+    }
+
+    /** Retrieves the data object for the selected bank. */
+    function getSelectedBankInfo() {
+        if (bankContainer.classList.contains('hidden') || !bankSelect.value) { return null; }
+        const countryBanksData = BANK_DATA[countrySelect.value];
+        return countryBanksData ? countryBanksData[bankSelect.value] : null;
+    }
+
+    // --- IBAN Generation Logic --- (No changes needed from previous version)
+    function generateIBAN(country, bankInfo) {
+        const spec = IBAN_SPECS[country];
+        if (!spec) return null;
+        let bankCodePart = '', branchCodePart = '', accountPart = '', nationalCheckPart = '';
+        let bbanBankCode = bankInfo ? bankInfo.code : null;
+        try {
+            switch (country) {
+                case 'NL': bankCodePart = bbanBankCode || generateRandomChars(spec.bankCodeLength, 'alphaUpper'); accountPart = generateRandomChars(spec.accountLength, 'numeric'); break;
+                case 'DE': bankCodePart = bbanBankCode || generateRandomChars(spec.bankCodeLength, 'numeric'); accountPart = generateRandomChars(spec.accountLength, 'numeric'); break;
+                case 'BE': bankCodePart = bbanBankCode || generateRandomChars(spec.bankCodeLength, 'numeric'); accountPart = generateRandomChars(spec.accountLength, 'numeric'); nationalCheckPart = calculateMod97Check((bankCodePart + accountPart).replace(/\D/g, '')); break;
+                case 'FR': bankCodePart = bbanBankCode || generateRandomChars(spec.bankCodeLength, 'numeric'); branchCodePart = generateRandomChars(spec.branchCodeLength, 'numeric'); accountPart = generateRandomChars(spec.accountLength, 'alphanumericUpper'); nationalCheckPart = generateRandomChars(spec.nationalCheckLength, 'numeric'); break;
+                case 'ES': bankCodePart = bbanBankCode || generateRandomChars(spec.bankCodeLength, 'numeric'); branchCodePart = generateRandomChars(spec.branchCodeLength, 'numeric'); accountPart = generateRandomChars(spec.accountLength, 'numeric'); nationalCheckPart = generateRandomChars(spec.nationalCheckLength, 'numeric'); break;
+                case 'IT': nationalCheckPart = generateRandomChars(spec.nationalCheckLength, 'alphaUpper'); bankCodePart = bbanBankCode || generateRandomChars(spec.bankCodeLength, 'numeric'); branchCodePart = generateRandomChars(spec.branchCodeLength, 'numeric'); accountPart = generateRandomChars(spec.accountLength, 'alphanumericUpper'); // <-- Aangepast naar alfanumeriek break;
+                default: const fallbackBbanLength = spec.length - 4; accountPart = generateRandomChars(fallbackBbanLength, 'alphanumericUpper'); break;
+            }
+        } catch (error) { console.error(`Error generating BBAN for ${country}:`, error); return null; }
+        let bban = '';
+        if (country === 'IT') { bban = nationalCheckPart + bankCodePart + branchCodePart + accountPart; }
+        else if (country === 'FR') { bban = bankCodePart + branchCodePart + accountPart + nationalCheckPart; }
+        else if (country === 'ES') { bban = bankCodePart + branchCodePart + nationalCheckPart + accountPart; }
+        else if (country === 'BE') { bban = bankCodePart + accountPart + nationalCheckPart; }
+        else { bban = bankCodePart + accountPart; }
+         const expectedBbanLength = spec.length - 4;
+         if (bban.length !== expectedBbanLength) { console.warn(`Adjusting BBAN length for ${country}: expected ${expectedBbanLength}, got ${bban.length}.`); bban = bban.length < expectedBbanLength ? bban.padEnd(expectedBbanLength, '0') : bban.substring(0, expectedBbanLength); }
+        const ibanWithoutCheck = `${country}00${bban}`;
+        const checkDigits = calculateIBANCheckDigits(ibanWithoutCheck);
+         if (!checkDigits) { console.error(`Failed check digit calculation for ${country} BBAN: ${bban}`); return null; }
+        return `${country}${checkDigits}${bban}`;
+    }
+    function generateRandomChars(length, type = 'numeric') {
+        let result = '';
+        const alphaUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const numeric = '0123456789';
+        const alphanumericUpper = alphaUpper + numeric;
+        let chars = numeric;
+        if (type === 'alphaUpper') chars = alphaUpper;
+        else if (type === 'alphanumericUpper') chars = alphanumericUpper;
+        if (window.crypto && window.crypto.getRandomValues) { const randomValues = new Uint32Array(length); window.crypto.getRandomValues(randomValues); for (let i = 0; i < length; i++) { result += chars[randomValues[i] % chars.length]; } }
+        else { console.warn("Using fallback Math.random() for character generation."); for (let i = 0; i < length; i++) { result += chars.charAt(Math.floor(Math.random() * chars.length)); } }
+        return result;
+    }
+    function calculateIBANCheckDigits(iban) {
+        const rearranged = iban.substring(4) + iban.substring(0, 4);
+        let numerical = '';
+        for (let i = 0; i < rearranged.length; i++) { const char = rearranged.charAt(i).toUpperCase(); if (char >= 'A' && char <= 'Z') { numerical += (char.charCodeAt(0) - 55).toString(); } else if (char >= '0' && char <= '9') { numerical += char; } }
+        try { if (!/^\d+$/.test(numerical)) { throw new Error("Non-digit characters present before BigInt conversion."); } const numBigInt = BigInt(numerical); const remainder = numBigInt % 97n; const checkDigitInt = 98n - remainder; return checkDigitInt < 10n ? `0${checkDigitInt}` : `${checkDigitInt}`; }
+        catch (e) { console.error("Error calculating IBAN check digits:", e, "Input:", numerical); return null; }
+    }
+    function calculateMod97Check(numericString) {
+         if (!numericString || !/^\d+$/.test(numericString)) return '00';
+        try { const numBigInt = BigInt(numericString); let remainder = numBigInt % 97n; if (remainder === 0n) remainder = 97n; return remainder < 10n ? `0${remainder}` : `${remainder}`; }
+        catch(e) { console.error("Error calculating Mod97 check:", e); return '99'; }
+    }
+    function formatIBAN(iban) { return typeof iban === 'string' ? iban.replace(/(.{4})/g, "$1 ").trim() : ''; }
+
+    // --- UI Interaction --- (Using English text directly)
+    function handleCopyClick() {
+        const ibanRaw = ibanResultSpan.textContent.replace(/\s/g, '');
+        if (!navigator.clipboard) { console.warn("Clipboard API not available."); copyMessage.textContent = "Clipboard API unavailable"; copyMessage.classList.remove('hidden'); return; }
+        navigator.clipboard.writeText(ibanRaw)
+            .then(() => {
+                copyMessage.textContent = "Copied!";
+                copyMessage.classList.remove('hidden');
+                 setTimeout(() => { copyMessage.setAttribute('role', 'alert'); setTimeout(() => copyMessage.removeAttribute('role'), 1000); }, 100);
+                setTimeout(() => { copyMessage.textContent = ''; }, 3000);
+            })
+            .catch(err => { console.error('Could not copy:', err); copyMessage.textContent = "Copy failed"; copyMessage.classList.remove('hidden'); });
+    }
+    function generateQRCode(iban) {
+         if (typeof QRious === 'undefined') { console.error("QRious library missing."); qrContainer.classList.add('hidden'); return; }
+        const ibanRaw = iban.replace(/\s/g, '');
+        const qrData = `BCD\n002\n1\nSCT\n\nIBAN Generator Test\n${ibanRaw}\n\n\n\n\n\n`;
+        qrCodeDiv.innerHTML = '';
+        try { qr = new QRious({ element: qrCodeDiv, value: qrData, size: 200, level: 'M', background: 'white', foreground: 'black', padding: 10 }); qrContainer.classList.remove('hidden'); }
+        catch (e) { console.error("QRious error:", e); qrContainer.classList.add('hidden'); }
+    }
+    function handleDownloadQrClick() {
+         const canvas = qrCodeDiv.querySelector('canvas');
+         if (!canvas) { console.error("QR canvas not found."); return; }
+         try { const link = document.createElement('a'); const countryCode = countrySelect.value; const ibanStart = ibanResultSpan.textContent.replace(/\s/g, '').substring(4, 8); link.download = `iban-qr-${countryCode}-${ibanStart}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }
+         catch (e) { console.error("Error downloading QR code:", e); }
+    }
+    function handleDownloadBulkClick() {
+        const text = bulkIbansTextarea.value;
+        if (!text) return;
+        try { const blob = new Blob([text], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = `iban-results-${countrySelect.value}-${bulkCountSpan.textContent}.txt`; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url); }
+        catch (e) { console.error("Error downloading bulk results:", e); }
+    }
+    function clearResults() {
+        singleResultContainer.classList.add('hidden');
+        bulkResultContainer.classList.add('hidden');
+        resultSection.classList.add('hidden');
+        ibanResultSpan.textContent = '';
+        copyMessage.textContent = '';
+        qrCodeDiv.innerHTML = '';
+        qrContainer.classList.add('hidden');
+        bulkIbansTextarea.value = '';
+        bulkCountSpan.textContent = '0';
+        bulkHeading.textContent = `Generated IBANs (0)`;
+    }
+
+    // --- Accessibility & Error Handling ---
+     function showError(inputElement, errorElement, message) {
+         if (inputElement && errorElement) {
+             errorElement.textContent = message;
+             errorElement.classList.add('has-error'); // ** Add class **
+             inputElement.setAttribute('aria-invalid', 'true');
+             const describedByIds = (inputElement.getAttribute('aria-describedby') || '').split(' ').filter(id => id);
+             if (!describedByIds.includes(errorElement.id)) { inputElement.setAttribute('aria-describedby', [...describedByIds, errorElement.id].join(' ')); }
+         }
+     }
+     function clearError(inputElement, errorElement) {
+         if (inputElement && errorElement) {
+             errorElement.textContent = '';
+             errorElement.classList.remove('has-error'); // ** Remove class **
+             inputElement.removeAttribute('aria-invalid');
+             const describedByIds = (inputElement.getAttribute('aria-describedby') || '').split(' ').filter(id => id);
+             const index = describedByIds.indexOf(errorElement.id);
+             if (index > -1) { describedByIds.splice(index, 1); const newAriaDesc = describedByIds.join(' '); if (newAriaDesc) { inputElement.setAttribute('aria-describedby', newAriaDesc); } else { inputElement.removeAttribute('aria-describedby'); } }
+         }
+     }
+     function clearAllErrors() {
+         clearError(countrySelect, countryError);
+         clearError(bankSelect, bankError);
+         clearError(quantityInput, quantityError);
+     }
+
+}); // End DOMContentLoaded
