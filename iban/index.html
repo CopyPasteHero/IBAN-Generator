@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBAN Generator | Open Source</title>
-    <meta name="description" content="Generate secure, valid IBAN numbers and SEPA QR codes for testing purposes. Open source.">
+    <meta name="description" content="Generate secure, valid IBAN numbers for testing purposes. Open source.">
     <!-- Link naar extern CSS bestand -->
     <link rel="stylesheet" href="style.css">
     <!-- Google Font -->
@@ -16,15 +16,13 @@
     <main>
         <div class="container">
             <header>
-                <!-- Language selector removed -->
                 <h1>IBAN Generator</h1>
                 <p class="subtitle">Generate secure, valid IBAN numbers for testing purposes</p>
             </header>
 
             <div class="card">
-                <!-- Fallback voor als JavaScript is uitgeschakeld -->
                 <noscript>
-                    <p class="error-message has-error">JavaScript is required for this tool to function. Please enable JavaScript in your browser.</p> <!-- has-error class added for correct styling -->
+                    <p class="error-message has-error">JavaScript is required for this tool to function. Please enable JavaScript in your browser.</p>
                 </noscript>
 
                 <form id="iban-form">
@@ -37,7 +35,7 @@
                                 <!-- Country options will be populated by JS -->
                             </select>
                             <p id="country-help" class="help-text">Select the country for the IBAN.</p>
-                             <p id="country-error" class="error-message" aria-live="assertive"></p> <!-- Class 'has-error' wordt via JS toegevoegd/verwijderd -->
+                             <p id="country-error" class="error-message" aria-live="assertive"></p>
                         </div>
 
                         <div class="form-group hidden" id="bank-container">
@@ -46,16 +44,15 @@
                                 <!-- Options loaded dynamically -->
                             </select>
                             <p id="bank-help" class="help-text">Optional: Select a bank for the chosen country.</p>
-                             <p id="bank-error" class="error-message" aria-live="assertive"></p> <!-- Class 'has-error' wordt via JS toegevoegd/verwijderd -->
+                             <p id="bank-error" class="error-message" aria-live="assertive"></p>
                         </div>
 
                          <div class="form-group">
                              <label for="quantity">Number of IBANs to generate:</label>
                              <input type="number" id="quantity" name="quantity" value="1" min="1" max="100" required autocomplete="off" aria-describedby="quantity-help quantity-error">
                              <p id="quantity-help" class="help-text">Enter a number between 1 and 100.</p>
-                             <p id="quantity-error" class="error-message" aria-live="assertive"></p> <!-- Class 'has-error' wordt via JS toegevoegd/verwijderd -->
+                             <p id="quantity-error" class="error-message" aria-live="assertive"></p>
                          </div>
-
 
                         <div class="form-group button-group">
                             <button type="submit" id="generate-btn" class="btn btn-primary">Generate IBAN(s)</button>
@@ -82,17 +79,12 @@
                             <p id="copy-message" class="copy-message" role="status" aria-live="polite"></p>
                          </div>
 
-                        <div id="qr-container" class="qr-container hidden">
-                            <h3>SEPA QR Code</h3>
-                            <div id="qr-code" aria-label="SEPA QR Code for the generated IBAN"></div>
-                             <p id="qr-help" class="help-text">Scan with a banking app for payment (test purposes only).</p>
-                            <button type="button" id="download-qr" class="btn btn-secondary">Download QR Code (PNG)</button>
-                        </div>
+                         <!-- QR CODE SECTIE IS HIER VOLLEDIG VERWIJDERD -->
+
                     </div>
 
                     <!-- Bulk IBAN Results -->
                     <div id="bulk-result-container" class="hidden">
-                        <!-- Heading text set dynamically via JS -->
                         <h3 id="bulk-heading">Generated IBANs (<span id="bulk-count">0</span>)</h3>
                         <div class="form-group">
                              <label for="bulk-ibans">Results:</label>
@@ -107,16 +99,15 @@
             </div>
 
             <footer class="footer">
-                <p>Open source IBAN generator | <a href="https://github.com/CopyPasteHero/CopyPasteHero.github.io/tree/main/iban" target="_blank" rel="noopener noreferrer" aria-label="View source code on GitHub">GitHub</a></p> <!-- Update URL and username -->
+                <p>Open source IBAN generator | <a href="https://github.com/CopyPasteHero/CopyPasteHero.github.io/tree/main/iban" target="_blank" rel="noopener noreferrer" aria-label="View source code on GitHub">GitHub</a></p>
                 <p class="disclaimer">Note: Generated IBANs are mathematically valid but do not correspond to real bank accounts. Use for testing purposes only.</p>
             </footer>
         </div>
     </main>
     <!-- End Main Content -->
 
-    <!-- External QRious Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" referrerpolicy="no-referrer"></script>
-    
+    <!-- External QRious Library VERWIJDERD -->
+
     <!-- Link naar extern JavaScript bestand -->
     <script src="script.js"></script>
 </body>

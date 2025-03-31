@@ -15,11 +15,10 @@
     --background-color: #f1f5f9;
     --card-background: white;
     --input-background: white;
-    --qr-background: white;
+    /* --qr-background: white; VERWIJDERD */
 
     --button-background: var(--primary-color); /* Gebruik de primaire kleur */
     --button-text: white; /* Witte tekst op blauwe knop */
-    /* --- EINDE TOEVOEGING --- */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,7 +36,7 @@
     --background-color: #0f172a;
     --card-background: #1e293b;
     --input-background: #0f172a;
-    --qr-background: #0f172a;
+    /* --qr-background: #0f172a; VERWIJDERD */
     --button-background: #2563eb;
     --button-text: #ffffff;
     --help-background: rgba(51, 65, 85, 0.4);
@@ -216,7 +215,7 @@ button {
 }
 
 .btn-secondary:hover {
-    background-color: #e2e8f0;
+    background-color: #e2e8f0; /* Consider making this a variable */
 }
 
 select:focus, input:focus, textarea:focus {
@@ -242,7 +241,7 @@ select[aria-invalid="true"]:focus,
 input[aria-invalid="true"]:focus,
 textarea[aria-invalid="true"]:focus {
      border-color: var(--error-color);
-     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5);
+     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5); /* Consider making this alpha value a variable */
 }
 
 .help-text {
@@ -272,12 +271,12 @@ textarea[aria-invalid="true"]:focus {
 .error-message.has-error,
 noscript p.error-message {
     margin-bottom: 1rem;
-    background-color: rgba(220, 38, 38, 0.05);
+    background-color: rgba(220, 38, 38, 0.05); /* Consider making alpha value a variable */
     padding: 0.5rem 1rem;
-    border: 1px solid rgba(220, 38, 38, 0.2);
+    border: 1px solid rgba(220, 38, 38, 0.2); /* Consider making alpha value a variable */
     border-radius: var(--border-radius);
     opacity: 1;
-    max-height: 10em;
+    max-height: 10em; /* Or use a variable if needed */
 }
 
 .button-group {
@@ -369,44 +368,16 @@ noscript p.error-message {
     border: none;
 }
 
-.qr-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background-color: var(--secondary-color);
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-}
+/* --- START QR CODE STYLES VERWIJDERD --- */
+/* .qr-container { ... } VERWIJDERD */
+/* .qr-container h3 { ... } VERWIJDERD */
+/* #qr-code { ... } VERWIJDERD */
+/* #qr-code canvas { ... } VERWIJDERD */
+/* #qr-help { ... } VERWIJDERD */
+/* --- EINDE QR CODE STYLES VERWIJDERD --- */
 
-.qr-container h3 {
-     align-self: flex-start;
-     color: var(--text-color);
-}
-
-#qr-code {
-    margin-bottom: 1rem;
-    background-color: var(--qr-background);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    line-height: 0;
-}
-
-#qr-code canvas {
-    display: block;
-    max-width: 100%;
-    height: auto;
-}
-
-#qr-help {
-    text-align: center;
-    margin-bottom: 1rem;
-    color: var(--text-light);
-}
-
-#download-qr, #download-bulk {
+/* Aangepast: #download-qr verwijderd */
+#download-bulk {
     max-width: 250px;
     width: 100%;
     margin: 0 auto;
@@ -447,104 +418,105 @@ noscript p.error-message {
   html {
     scroll-behavior: auto;
   }
-  
+
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
-  .card:hover { 
-    transform: none; 
+
+  .card:hover {
+    transform: none;
   }
 }
 
 @media print {
-  body { 
-    background-color: #fff; 
-    color: #000; 
-    font-size: 12pt; 
+  body {
+    background-color: #fff;
+    color: #000;
+    font-size: 12pt;
   }
-  
-  .container { 
-    max-width: 100%; 
-    margin: 0; 
-    padding: 0; 
+
+  .container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
   }
-  
-  header, footer, .button-group, #copy-btn, #download-qr, #download-bulk, .qr-container, #copy-message, .error-message, noscript p { 
-    display: none !important; 
+
+  /* Aangepast: #download-qr en .qr-container verwijderd uit de lijst */
+  header, footer, .button-group, #copy-btn, #download-bulk, #copy-message, .error-message, noscript p {
+    display: none !important;
   }
-  
-  .card { 
-    box-shadow: none; 
-    border: 1px solid #ccc; 
-    padding: 1rem; 
-    margin: 0; 
-    page-break-inside: avoid; 
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    margin: 0;
+    page-break-inside: avoid;
   }
-  
-  a { 
-    text-decoration: none; 
-    color: #000; 
+
+  a {
+    text-decoration: none;
+    color: #000;
   }
-  
-  a[href^="http"]::after { 
-    content: " (" attr(href) ") "; 
-    font-size: 9pt; 
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ") ";
+    font-size: 9pt;
   }
-  
-  #iban-result { 
-    font-size: 12pt; 
-    letter-spacing: normal; 
-    word-spacing: normal; 
+
+  #iban-result {
+    font-size: 12pt;
+    letter-spacing: normal;
+    word-spacing: normal;
   }
-  
-  textarea#bulk-ibans { 
-    font-size: 10pt; 
-    background-color: #fff; 
-    border: 1px solid #ccc; 
-    height: auto; 
-    overflow: visible; 
-    white-space: pre-wrap; 
+
+  textarea#bulk-ibans {
+    font-size: 10pt;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    height: auto;
+    overflow: visible;
+    white-space: pre-wrap;
   }
 }
 
 @media (max-width: 600px) {
-    h1 { 
-      font-size: 1.8rem; 
+    h1 {
+      font-size: 1.8rem;
     }
-    
-    .subtitle { 
-      font-size: 1rem; 
+
+    .subtitle {
+      font-size: 1rem;
     }
-    
-    .card { 
-      padding: 1.5rem; 
+
+    .card {
+      padding: 1.5rem;
     }
-    
-    .card:hover { 
-      transform: none; 
-      box-shadow: var(--card-shadow); 
+
+    .card:hover {
+      transform: none;
+      box-shadow: var(--card-shadow);
     }
-    
-    #iban-result { 
-      font-size: 1rem; 
+
+    #iban-result {
+      font-size: 1rem;
     }
-    
-    .button-group .btn { 
-      width: 100%; 
-      flex-grow: 0; 
+
+    .button-group .btn {
+      width: 100%;
+      flex-grow: 0;
     }
-    
-    .iban-display { 
-      flex-direction: column; 
-      align-items: flex-start; 
+
+    .iban-display {
+      flex-direction: column;
+      align-items: flex-start;
     }
-    
-    #copy-btn { 
-      margin-top: 0.5rem; 
-      align-self: flex-end; 
+
+    #copy-btn {
+      margin-top: 0.5rem;
+      align-self: flex-end;
     }
 }
