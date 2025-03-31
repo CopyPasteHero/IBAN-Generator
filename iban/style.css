@@ -16,6 +16,10 @@
     --card-background: white;
     --input-background: white;
     --qr-background: white;
+
+    --button-background: var(--primary-color); /* Gebruik de primaire kleur */
+    --button-text: white; /* Witte tekst op blauwe knop */
+    /* --- EINDE TOEVOEGING --- */
 }
 
 @media (prefers-color-scheme: dark) {
