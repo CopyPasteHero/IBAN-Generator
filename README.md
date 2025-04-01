@@ -7,7 +7,6 @@ Welcome to my GitHub Pages repository! This site hosts various web projects and 
 ### IBAN Generator
 A client-side web application for generating valid IBAN numbers for testing purposes.
 - **Live Demo**: [https://probeer.me/iban](https://probeer.me/iban)
-+ **Live Demo**: [./iban](./iban)
 - **Features**: Multi-country support, bank selection and more
 - [View IBAN Project Files](./iban)
 
