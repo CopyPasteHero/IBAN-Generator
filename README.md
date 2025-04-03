@@ -39,7 +39,7 @@ This repository is accessible via:
 Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
 
 ## License
-This repository is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+This repository is licensed under the MIT License - see the [LICENSE](./iban/LICENSE) file for details.
 
 ## Contact
 GitHub: [@CopyPasteHero](https://github.com/CopyPasteHero)
