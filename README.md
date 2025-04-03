@@ -1,8 +1,8 @@
 # CopyPasteHero.github.io
 
-Welcome to my GitHub Pages repository! This site hosts various web projects and tools that I’ve developed.
+Welcome to my GitHub Pages repository!
 
-## Projects
+## Project
 
 ### IBAN Generator
 A client-side web application for generating valid IBAN numbers for testing purposes.
