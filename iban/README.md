@@ -14,7 +14,6 @@ A robust client-side application for generating valid IBAN numbers across multip
 - ✅ Generates mathematically valid IBANs for 6 European countries
 - 🏦 Bank-specific IBAN generation options
 - 📱 Responsive design with accessibility focus
-- 🛡️ Client-side processing (no data leaves your browser)
 - 📋 Copy to clipboard functionality
 - 💾 Bulk generation with download option
 
