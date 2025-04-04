@@ -9,5 +9,7 @@ review_goals:
   - Encourage modular, reusable JavaScript components
   - Flag unused code or dependencies
   - Validate clear, user-friendly error messages and labels
+review_status: true
+allow_auto_review_on_all_branches: true
 language: en
 codebase_type: frontend
