@@ -1,0 +1,6 @@
+review_goals:
+  - Catch logic errors in IBAN generation
+  - Enforce accessibility standards
+  - Ensure semantic HTML and responsive layout
+language: en
+codebase_type: frontend
