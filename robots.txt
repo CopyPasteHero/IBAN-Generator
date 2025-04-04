@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+
+# Gecontroleerde toegang voor AI assistenten
+User-agent: GPTBot
+Allow: /iban/
+Disallow: /private/
+Disallow: /admin/
+
+User-agent: ChatGPT-User
+Allow: /iban/
+Disallow: /private/
+Disallow: /admin/
+
+User-agent: Google-Extended
+Allow: /iban/
+Disallow: /private/
+Disallow: /admin/
+
+User-agent: anthropic-ai
+Allow: /iban/
+Disallow: /private/
+Disallow: /admin/
+
+User-agent: CCBot
+Allow: /iban/
+Disallow: /private/
+Disallow: /admin/
+
+# Verwijzing naar sitemap
+Sitemap: https://probeer.me/iban/sitemap.xml
