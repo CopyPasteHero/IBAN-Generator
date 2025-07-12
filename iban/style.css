@@ -67,7 +67,7 @@ body {
 /* Skip Navigation Link for accessibility */
 .skip-link {
     position: absolute;
-    top: -40px;
+    top: -100px;
     left: 6px;
     background: var(--primary-color);
     color: white;
@@ -77,12 +77,16 @@ body {
     border-radius: var(--border-radius);
     z-index: 1000;
     transition: top var(--transition-duration) var(--transition-timing);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
 }
 
 .skip-link:focus {
     top: 6px;
     outline: 3px solid var(--focus-ring-color);
     outline-offset: 2px;
+    clip: auto;
+    overflow: visible;
 }
 
 /* Screen reader only content */
