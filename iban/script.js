@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedCountry = countrySelect.value; 
         const banksForCountryData = BANK_DATA[selectedCountry]; 
         const helpTextEl = document.getElementById('bank-help'); 
+        const wasHidden = bankContainer.classList.contains('hidden');
         bankSelect.innerHTML = ''; 
         
         if (banksForCountryData && Object.keys(banksForCountryData).length > 0) { 
@@ -105,10 +106,40 @@ document.addEventListener('DOMContentLoaded', function() {
             bankContainer.classList.remove('hidden'); 
             bankSelect.disabled = false; 
             if(helpTextEl) helpTextEl.textContent = `Optional: Select a bank for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}.`; 
+            
+            // Announce to screen readers when bank selector becomes available
+            if (wasHidden) {
+                // Create a temporary live region announcement
+                const announcement = document.createElement('div');
+                announcement.setAttribute('aria-live', 'polite');
+                announcement.setAttribute('aria-atomic', 'true');
+                announcement.className = 'sr-only';
+                announcement.textContent = `Bank selection is now available for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}.`;
+                document.body.appendChild(announcement);
+                
+                // Remove the announcement after screen readers have processed it
+                setTimeout(() => {
+                    document.body.removeChild(announcement);
+                }, 1000);
+            }
         } else { 
             bankContainer.classList.add('hidden'); 
             bankSelect.disabled = true; 
             if(helpTextEl) helpTextEl.textContent = `No specific banks available for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}. A random valid bank code will be used.`; 
+            
+            // Announce to screen readers when bank selector becomes unavailable
+            if (!wasHidden) {
+                const announcement = document.createElement('div');
+                announcement.setAttribute('aria-live', 'polite');
+                announcement.setAttribute('aria-atomic', 'true');
+                announcement.className = 'sr-only';
+                announcement.textContent = `Bank selection is not needed for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}. A random valid bank code will be used.`;
+                document.body.appendChild(announcement);
+                
+                setTimeout(() => {
+                    document.body.removeChild(announcement);
+                }, 1000);
+            }
         } 
         
         clearError(bankSelect, bankError); 

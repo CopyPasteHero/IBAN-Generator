@@ -17,9 +17,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <main>
+    <!-- Skip Navigation Link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <main id="main-content">
         <div class="container">
-            <header>
+            <header role="banner">
                 <h1>IBAN Generator</h1>
                 <p class="subtitle">Generate valid IBAN numbers for testing purposes</p>
             </header>
@@ -99,7 +102,7 @@
                 </div>
             </div>
 
-            <footer class="footer">
+            <footer class="footer" role="contentinfo">
                 <p>Open source IBAN generator | <a href="https://github.com/CopyPasteHero/CopyPasteHero.github.io/tree/main/iban" target="_blank" rel="noopener noreferrer" aria-label="View source code on GitHub">GitHub</a></p>
                 <p class="disclaimer">Note: Generated IBANs are mathematically valid but do not correspond to real bank accounts. Use for testing purposes only.</p>
             </footer>
