@@ -569,10 +569,10 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
       case "numeric":
       case "n":
+        chars = numeric;
+        break;
       default:
-        if (lowerType !== "numeric" && lowerType !== "n") {
-          console.warn(`Unknown type '${type}', using numeric.`);
-        }
+        console.warn(`Unknown type '${type}', using numeric.`);
         chars = numeric;
         break;
     }
