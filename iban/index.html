@@ -22,7 +22,7 @@
     
     <main id="main-content">
         <div class="container">
-            <header role="banner" class="header">
+            <header role="banner">
                 <h1>IBAN Generator</h1>
                 <p class="subtitle">Generate valid IBAN numbers for testing purposes</p>
             </header>
@@ -62,21 +62,21 @@
                          </div>
 
                         <div class="form-group button-group">
-                            <button type="submit" id="generate-btn" class="btn btn--primary">Generate IBAN(s)</button>
+                            <button type="submit" id="generate-btn" class="btn btn-primary">Generate IBAN(s)</button>
                         </div>
                     </fieldset>
                 </form>
 
-                <div id="result-section" class="hidden result-section" role="region" aria-labelledby="result-heading">
+                <div id="result-section" class="hidden" role="region" aria-labelledby="result-heading">
                     <h2 id="result-heading" class="form-section-heading">Generated Results</h2>
 
                     <!-- Single IBAN Result -->
                     <div id="single-result-container" class="hidden">
-                         <h3 class="result-section__heading">Generated IBAN</h3>
+                         <h3>Generated IBAN</h3>
                          <div class="iban-result">
                             <div class="iban-display">
-                                <span id="iban-result" class="iban-display__value" aria-live="polite"></span>
-                                <button type="button" id="copy-btn" class="btn--icon" title="Copy to clipboard" aria-label="Copy IBAN to clipboard">
+                                <span id="iban-result" aria-live="polite"></span>
+                                <button type="button" id="copy-btn" title="Copy to clipboard" aria-label="Copy IBAN to clipboard">
                                     <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -88,23 +88,23 @@
                     </div>
 
                     <!-- Bulk IBAN Results -->
-                    <div id="bulk-result-container" class="hidden bulk-result-container">
-                        <h3 id="bulk-heading" class="bulk-result-container__heading">Generated IBANs (<span id="bulk-count" class="bulk-result-container__count">0</span>)</h3>
+                    <div id="bulk-result-container" class="hidden">
+                        <h3 id="bulk-heading">Generated IBANs (<span id="bulk-count">0</span>)</h3>
                         <div class="form-group">
-                             <label for="bulk-ibans" class="form__label">Results:</label>
-                             <textarea id="bulk-ibans" class="form__field--textarea" rows="10" readonly aria-describedby="bulk-ibans-help" aria-label="Generated IBANs"></textarea>
+                             <label for="bulk-ibans">Results:</label>
+                             <textarea id="bulk-ibans" rows="10" readonly aria-describedby="bulk-ibans-help" aria-label="Generated IBANs"></textarea>
                              <p id="bulk-ibans-help" class="help-text">Generated IBANs, one per line.</p>
                         </div>
                          <div class="form-group button-group">
-                            <button type="button" id="download-bulk" class="btn btn--secondary">Download Results (.txt)</button>
+                            <button type="button" id="download-bulk" class="btn btn-secondary">Download Results (.txt)</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <footer class="footer" role="contentinfo">
-                <p>Open source IBAN generator | <a href="https://github.com/CopyPasteHero/CopyPasteHero.github.io/tree/main/iban" target="_blank" rel="noopener noreferrer" aria-label="View source code on GitHub" class="footer__link">GitHub</a></p>
-                <p class="footer__disclaimer">Note: Generated IBANs are mathematically valid but do not correspond to real bank accounts. Use for testing purposes only.</p>
+                <p>Open source IBAN generator | <a href="https://github.com/CopyPasteHero/CopyPasteHero.github.io/tree/main/iban" target="_blank" rel="noopener noreferrer" aria-label="View source code on GitHub">GitHub</a></p>
+                <p class="disclaimer">Note: Generated IBANs are mathematically valid but do not correspond to real bank accounts. Use for testing purposes only.</p>
             </footer>
         </div>
     </main>
