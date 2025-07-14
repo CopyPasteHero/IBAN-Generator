@@ -368,10 +368,10 @@ h3 {
 
 /* Form fields base styles */
 .form__field,
-select,
-input[type="text"],
-input[type="number"],
-textarea {
+.form select,
+.form input[type="text"],
+.form input[type="number"],
+.form textarea {
   width: 100%;
   padding: var(--space-md) var(--space-lg);
   font-size: var(--font-size-base);
