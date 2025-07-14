@@ -1,4 +1,45 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // --- Accessibility Announcer Singleton ---
+  const AccessibilityAnnouncer = {
+    element: null,
+    timer: null,
+
+    init() {
+      if (!this.element) {
+        this.element = document.createElement("div");
+        this.element.setAttribute("aria-live", "polite");
+        this.element.setAttribute("aria-atomic", "true");
+        this.element.className = "sr-only";
+        document.body.appendChild(this.element);
+      }
+    },
+
+    announce(message, delay = 300) {
+      this.init();
+
+      // Debounce rapid announcements
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+
+      this.timer = setTimeout(() => {
+        this.element.textContent = message;
+
+        // Clear after screen readers process it
+        setTimeout(() => {
+          this.element.textContent = "";
+        }, 3000);
+      }, delay);
+    },
+
+    cleanup() {
+      if (this.timer) clearTimeout(this.timer);
+      if (this.element && this.element.parentNode) {
+        this.element.parentNode.removeChild(this.element);
+      }
+    },
+  };
+
   // --- DOM Elements ---
   const ibanForm = document.getElementById("iban-form");
   const countrySelect = document.getElementById("country");
@@ -203,18 +244,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Announce to screen readers when bank selector becomes available
       if (wasHidden) {
-        // Create a temporary live region announcement
-        const announcement = document.createElement("div");
-        announcement.setAttribute("aria-live", "polite");
-        announcement.setAttribute("aria-atomic", "true");
-        announcement.className = "sr-only";
-        announcement.textContent = `Bank selection is now available for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}.`;
-        document.body.appendChild(announcement);
-
-        // Remove the announcement after screen readers have processed it
-        setTimeout(() => {
-          document.body.removeChild(announcement);
-        }, 1000);
+        AccessibilityAnnouncer.announce(
+          `Bank selection is now available for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}.`
+        );
       }
     } else {
       bankContainer.classList.add("hidden");
@@ -224,16 +256,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Announce to screen readers when bank selector becomes unavailable
       if (!wasHidden) {
-        const announcement = document.createElement("div");
-        announcement.setAttribute("aria-live", "polite");
-        announcement.setAttribute("aria-atomic", "true");
-        announcement.className = "sr-only";
-        announcement.textContent = `Bank selection is not needed for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}. A random valid bank code will be used.`;
-        document.body.appendChild(announcement);
-
-        setTimeout(() => {
-          document.body.removeChild(announcement);
-        }, 1000);
+        AccessibilityAnnouncer.announce(
+          `Bank selection is not needed for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}. A random valid bank code will be used.`
+        );
       }
     }
 
@@ -732,4 +757,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (countrySelect.options.length > 0) countrySelect.selectedIndex = 0;
   }
   updateBankSelector();
+
+  // --- Cleanup on page unload ---
+  window.addEventListener("beforeunload", function () {
+    AccessibilityAnnouncer.cleanup();
+  });
 });
