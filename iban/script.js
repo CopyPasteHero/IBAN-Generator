@@ -570,7 +570,7 @@ document.addEventListener("DOMContentLoaded", function () {
       case "numeric":
       case "n":
       default:
-        if (type?.toLowerCase() !== "numeric" && type?.toLowerCase() !== "n") {
+        if (lowerType !== "numeric" && lowerType !== "n") {
           console.warn(`Unknown type '${type}', using numeric.`);
         }
         chars = numeric;
