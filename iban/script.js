@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     },
 
-    announce(message, delay = 300) {
+    announce(message, delay = this.DEBOUNCE_DELAY) {
       this.init();
 
       // Debounce rapid announcements
