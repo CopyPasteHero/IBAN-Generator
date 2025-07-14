@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
         this.element.textContent = message;
 
         // Clear after screen readers process it
-        setTimeout(() => {
+        this.clearTimer = setTimeout(() => {
           this.element.textContent = "";
         }, 3000);
       }, delay);
