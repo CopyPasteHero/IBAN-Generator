@@ -555,8 +555,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const numeric = "0123456789";
     const alphanumericUpper = alphaUpper + numeric;
     let chars;
+    const lowerType = type?.toLowerCase();
 
-    switch (type?.toLowerCase()) {
+    switch (lowerType) {
       case "alphaupper":
       case "alpha":
         chars = alphaUpper;
