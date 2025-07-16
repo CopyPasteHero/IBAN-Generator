@@ -128,12 +128,18 @@ const IbanForm: React.FC = () => {
     }
 
     // Scroll to results
-    setTimeout(() => {
-      const resultSection = document.querySelector('[data-result-section]');
-      if (resultSection) {
-        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    useEffect(() => {
+      if (isResultVisible) {
+        const timeoutId = setTimeout(() => {
+          const resultSection = document.querySelector('[data-result-section]');
+          if (resultSection) {
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+
+        return () => clearTimeout(timeoutId);
       }
-    }, 100);
+    }, [isResultVisible]);
   };
 
   return (
