@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/iban/static/css/main.04f11110.css",
+    "main.js": "/iban/static/js/main.233b8007.js",
+    "index.html": "/iban/index.html",
+    "main.04f11110.css.map": "/iban/static/css/main.04f11110.css.map",
+    "main.233b8007.js.map": "/iban/static/js/main.233b8007.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.04f11110.css",
+    "static/js/main.233b8007.js"
+  ]
+}
