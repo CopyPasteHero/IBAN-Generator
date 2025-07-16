@@ -10,7 +10,7 @@ interface IbanResultProps {
 
 const IbanResult: React.FC<IbanResultProps> = ({ iban, ibans, quantity, isVisible }) => {
   const [copyMessage, setCopyMessage] = useState<string>('');
-  const [copyMessageTimeout, setCopyMessageTimeout] = useState<number | null>(null);
+  const [copyMessageTimeout, setCopyMessageTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   if (!isVisible) {
     return null;
