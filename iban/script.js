@@ -27,7 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (typeof input !== 'string') {
       return '';
     }
-    return input.replace(/<[^>]*>/g, '').replace(/[<>&"']/g, (char) => {
+    let sanitized = input;
+    let previous;
+    do {
+      previous = sanitized;
+      sanitized = sanitized.replace(/<[^>]*>/g, '');
+    } while (sanitized !== previous);
+    return sanitized.replace(/[<>&"']/g, (char) => {
       const entities = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#x27;' };
       return entities[char] || char;
     });
