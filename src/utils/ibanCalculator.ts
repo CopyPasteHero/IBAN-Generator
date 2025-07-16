@@ -199,8 +199,9 @@ export function generateRandomChars(length: number, type: string = "numeric"): s
       result += chars[randomValues[i] % chars.length];
     }
   } else {
-    console.warn("Using fallback Math.random().");
-
+    if (process.env.NODE_ENV === 'development') {
+      console.warn("Using fallback Math.random().");
+    }
     for (let i = 0; i < length; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
