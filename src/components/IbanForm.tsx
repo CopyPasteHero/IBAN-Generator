@@ -182,8 +182,10 @@ const IbanForm: React.FC = () => {
               min="1"
               max="100"
               onChange={(e) => {
-                const value = e.target.valueAsNumber;
-                handleQuantityChange(Number.isNaN(value) ? 1 : value);
+                const rawValue = e.target.value;
+                const parsedValue = parseInt(rawValue, 10);
+                const validatedValue = !isNaN(parsedValue) && parsedValue >= 1 && parsedValue <= 100 ? parsedValue : 1;
+                handleQuantityChange(validatedValue);
               }}
               required
               autoComplete="off"
