@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const AccessibilityAnnouncer = {
     element: null,
     timer: null,
+    clearTimer: null,
+    DEBOUNCE_DELAY: 100,
 
     init() {
       if (!this.element) {
@@ -33,9 +35,17 @@ document.addEventListener("DOMContentLoaded", function () {
     },
 
     cleanup() {
-      if (this.timer) clearTimeout(this.timer);
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      if (this.clearTimer) {
+        clearTimeout(this.clearTimer);
+        this.clearTimer = null;
+      }
       if (this.element && this.element.parentNode) {
         this.element.parentNode.removeChild(this.element);
+        this.element = null;
       }
     },
   };
