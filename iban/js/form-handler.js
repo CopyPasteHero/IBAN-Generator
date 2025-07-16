@@ -188,38 +188,32 @@ export class FormHandler {
    * @private
    */
   async generateBulkIBANs(country, bankCodeInfo, quantity) {
-    return new Promise((resolve, reject) => {
-      // Use setTimeout to make generation async and allow UI updates
-      setTimeout(() => {
-        try {
-          const { ibans, failures } = generateBulkIBANs(country, bankCodeInfo, quantity);
-          
-          if (ibans.length > 0) {
-            const formattedIbans = ibans.map(iban => formatIBANForDisplay(iban));
-            displayBulkIBANs(formattedIbans, failures, this.elements);
-            clearError(this.elements.ibanForm, this.elements.countryError);
+    try {
+      const { ibans, failures } = generateBulkIBANs(country, bankCodeInfo, quantity);
+      
+      if (ibans.length > 0) {
+        const formattedIbans = ibans.map(iban => formatIBANForDisplay(iban));
+        displayBulkIBANs(formattedIbans, failures, this.elements);
+        clearError(this.elements.ibanForm, this.elements.countryError);
 
-            if (failures > 0) {
-              const warningMessage = `Note: ${failures} out of ${quantity} IBANs could not be generated.`;
-              showError(this.elements.ibanForm, this.elements.quantityError, warningMessage);
-            } else {
-              clearError(this.elements.ibanForm, this.elements.quantityError);
-            }
-            
-            resolve({ ibans: formattedIbans, failures });
-          } else {
-            const error = new IBANGenerationError(
-              `Failed to generate any IBANs for ${COUNTRY_NAMES[country] || country}`,
-              country,
-              { requestedQuantity: quantity }
-            );
-            reject(error);
-          }
-        } catch (error) {
-          reject(error);
+        if (failures > 0) {
+          const warningMessage = `Note: ${failures} out of ${quantity} IBANs could not be generated.`;
+          showError(this.elements.ibanForm, this.elements.quantityError, warningMessage);
+        } else {
+          clearError(this.elements.ibanForm, this.elements.quantityError);
         }
-      }, 0);
-    });
+        
+        return { ibans: formattedIbans, failures };
+      } else {
+        throw new IBANGenerationError(
+          `Failed to generate any IBANs for ${COUNTRY_NAMES[country] || country}`,
+          country,
+          { requestedQuantity: quantity }
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
