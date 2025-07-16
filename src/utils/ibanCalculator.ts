@@ -224,7 +224,7 @@ export function calculateIBANCheckDigits(iban: string): string | null {
     } else if (char >= "0" && char <= "9") {
       numerical += char;
     } else {
-      console.error(`Invalid char: ${char}`);
+      logger.error(`Invalid char: ${char}`);
       return null;
     }
   }
