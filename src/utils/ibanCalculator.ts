@@ -150,9 +150,7 @@ export function getSuggestedCountry(): string {
     if (baseLang === "nl" && IBAN_SPECS["NL"]) return "NL";
     if (baseLang === "de" && IBAN_SPECS["DE"]) return "DE";
     if (baseLang === "fr") {
-      if ((lang.includes("be") || lang.includes("bru")) && IBAN_SPECS["BE"]) return "BE";
-      if (IBAN_SPECS["FR"]) return "FR";
-      if (IBAN_SPECS["BE"]) return "BE";
+      return getFrenchSuggestedCountry(lang);
     }
     if (baseLang === "es" && IBAN_SPECS["ES"]) return "ES";
     if (baseLang === "it" && IBAN_SPECS["IT"]) return "IT";
