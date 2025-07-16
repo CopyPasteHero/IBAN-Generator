@@ -12,9 +12,10 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({
   onCountryChange,
   error
 }) => {
-  const sortedCountries = Object.keys(IBAN_SPECS).sort((a, b) =>
-    (COUNTRY_NAMES[a] || a).localeCompare(COUNTRY_NAMES[b] || b)
-  );
+  const sortedCountries = useMemo(() => 
+    Object.keys(IBAN_SPECS).sort((a, b) =>
+      (COUNTRY_NAMES[a] || a).localeCompare(COUNTRY_NAMES[b] || b)
+    ), [IBAN_SPECS, COUNTRY_NAMES]);
 
   return (
     <div className="mb-6">
