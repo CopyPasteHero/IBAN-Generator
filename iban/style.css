@@ -1,0 +1,560 @@
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #f8fafc;
+    --text-color: #1e293b;
+    --text-light: #334155;
+    --border-color: #cbd5e1;
+    --error-color: #dc2626;
+    --success-color: #16a34a;
+    --focus-ring-color: rgba(37, 99, 235, 0.5);
+    --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --transition-duration: 0.2s;
+    --transition-timing: ease-in-out;
+    --border-radius: 6px;
+    --background-color: #f1f5f9;
+    --card-background: white;
+    --input-background: white;
+    /* --qr-background: white; VERWIJDERD */
+
+    --button-background: var(--primary-color); /* Gebruik de primaire kleur */
+    --button-text: white; /* Witte tekst op blauwe knop */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #3b82f6;
+    --primary-hover: #60a5fa;
+    --secondary-color: #1e293b;
+    --text-color: #f8fafc;
+    --text-light: #cbd5e1;
+    --border-color: #475569;
+    --error-color: #ef4444;
+    --success-color: #22c55e;
+    --focus-ring-color: rgba(96, 165, 250, 0.5);
+    --card-shadow: 0 4px 6px -1px rgb(255 255 255 / 0.05), 0 2px 4px -2px rgb(255 255 255 / 0.05);
+    --background-color: #0f172a;
+    --card-background: #1e293b;
+    --input-background: #0f172a;
+    /* --qr-background: #0f172a; VERWIJDERD */
+    --button-background: #2563eb;
+    --button-text: #ffffff;
+    --help-background: rgba(51, 65, 85, 0.4);
+  }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+     scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 1rem;
+}
+
+/* Skip Navigation Link for accessibility */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 6px;
+    background: var(--primary-color);
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    z-index: 1000;
+    transition: top var(--transition-duration) var(--transition-timing);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+}
+
+.skip-link:focus {
+    top: 6px;
+    outline: 3px solid var(--focus-ring-color);
+    outline-offset: 2px;
+    clip: auto;
+    overflow: visible;
+}
+
+/* Screen reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.container {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+    transition: transform var(--transition-duration) var(--transition-timing), box-shadow var(--transition-duration) var(--transition-timing);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+legend.form-section-heading,
+h2.form-section-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    width: 100%;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+fieldset .form-group:not(:last-child) {
+     margin-bottom: 1.5rem;
+}
+
+fieldset .form-group:last-of-type:not(.button-group) {
+    margin-bottom: 0;
+}
+
+fieldset .button-group {
+     margin-top: 1.5rem;
+     margin-bottom: 0;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+select, option {
+    color: var(--text-color);
+    background-color: var(--input-background);
+}
+
+select, input[type="text"], input[type="number"], textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    transition: border-color var(--transition-duration) var(--transition-timing), box-shadow var(--transition-duration) var(--transition-timing);
+}
+
+textarea#bulk-ibans {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    background-color: var(--input-background);
+    border: 1px solid var(--border-color);
+    overflow-y: auto;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+    padding: 0;
+    appearance: none;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition-duration) var(--transition-timing), border-color var(--transition-duration) var(--transition-timing), box-shadow var(--transition-duration) var(--transition-timing), transform var(--transition-duration) var(--transition-timing);
+}
+
+.btn-primary {
+    background-color: var(--button-background);
+    color: var(--button-text);
+    border: 1px solid transparent;
+}
+
+/* Selector voor id generate-btn */
+#generate-btn {
+    color: var(--button-text) !important;
+    background-color: var(--button-background) !important;
+    opacity: 1 !important;
+    border: 1px solid transparent !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0; /* Consider making this a variable */
+}
+
+select:focus, input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--focus-ring-color);
+}
+
+.btn:focus-visible,
+#copy-btn:focus-visible {
+     outline: 3px solid var(--focus-ring-color);
+     outline-offset: 2px;
+}
+
+select[aria-invalid="true"],
+input[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 1px var(--error-color);
+}
+
+select[aria-invalid="true"]:focus,
+input[aria-invalid="true"]:focus,
+textarea[aria-invalid="true"]:focus {
+     border-color: var(--error-color);
+     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5); /* Consider making this alpha value a variable */
+}
+
+.help-text {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-top: 0.5rem;
+}
+
+.error-message {
+    font-size: 0.875rem;
+    color: var(--error-color);
+    margin-top: 0.5rem;
+    font-weight: 500;
+    display: block;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity var(--transition-duration) var(--transition-timing),
+                max-height var(--transition-duration) var(--transition-timing),
+                padding var(--transition-duration) var(--transition-timing),
+                margin-bottom var(--transition-duration) var(--transition-timing);
+}
+
+.error-message.has-error,
+noscript p.error-message {
+    margin-bottom: 1rem;
+    background-color: rgba(220, 38, 38, 0.05); /* Consider making alpha value a variable */
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(220, 38, 38, 0.2); /* Consider making alpha value a variable */
+    border-radius: var(--border-radius);
+    opacity: 1;
+    max-height: 10em; /* Or use a variable if needed */
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.button-group .btn {
+     flex-grow: 1;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+    border: 0;
+}
+
+#result-section {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+#result-section h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.iban-result {
+    margin-bottom: 1.5rem;
+}
+
+.iban-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--secondary-color);
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+#iban-result {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.15rem;
+    letter-spacing: 1px;
+    word-break: break-all;
+    margin-right: 1rem;
+    flex-grow: 1;
+    color: var(--text-color);
+}
+
+#copy-btn {
+    color: var(--text-light);
+    padding: 0.5rem;
+    width: auto;
+    flex-shrink: 0;
+    transition: color var(--transition-duration) var(--transition-timing);
+}
+
+#copy-btn:hover {
+    color: var(--primary-color);
+}
+
+#copy-btn svg {
+     display: block;
+}
+
+.copy-message {
+    color: var(--success-color);
+    font-size: 0.875rem;
+    text-align: right;
+    font-weight: 500;
+    min-height: 1.2em;
+    background-color: transparent;
+    padding: 0;
+    border: none;
+}
+
+/* --- START QR CODE STYLES VERWIJDERD --- */
+/* .qr-container { ... } VERWIJDERD */
+/* .qr-container h3 { ... } VERWIJDERD */
+/* #qr-code { ... } VERWIJDERD */
+/* #qr-code canvas { ... } VERWIJDERD */
+/* #qr-help { ... } VERWIJDERD */
+/* --- EINDE QR CODE STYLES VERWIJDERD --- */
+
+/* Aangepast: #download-qr verwijderd */
+#download-bulk {
+    max-width: 250px;
+    width: 100%;
+    margin: 0 auto;
+    flex-grow: 0;
+}
+
+#bulk-result-container {
+    margin-top: 2rem;
+}
+
+.footer {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.875rem;
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer a {
+    color: var(--primary-hover);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.footer a:hover, .footer a:focus {
+    text-decoration: underline;
+}
+
+.disclaimer {
+    margin-top: 0.5rem;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}
+
+@media print {
+  body {
+    background-color: #fff;
+    color: #000;
+    font-size: 12pt;
+  }
+
+  .container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Aangepast: #download-qr en .qr-container verwijderd uit de lijst */
+  header, footer, .button-group, #copy-btn, #download-bulk, #copy-message, .error-message, noscript p {
+    display: none !important;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    margin: 0;
+    page-break-inside: avoid;
+  }
+
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ") ";
+    font-size: 9pt;
+  }
+
+  #iban-result {
+    font-size: 12pt;
+    letter-spacing: normal;
+    word-spacing: normal;
+  }
+
+  textarea#bulk-ibans {
+    font-size: 10pt;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    height: auto;
+    overflow: visible;
+    white-space: pre-wrap;
+  }
+}
+
+@media (max-width: 600px) {
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+    }
+
+    .card {
+      padding: 1.5rem;
+    }
+
+    .card:hover {
+      transform: none;
+      box-shadow: var(--card-shadow);
+    }
+
+    #iban-result {
+      font-size: 1rem;
+    }
+
+    .button-group .btn {
+      width: 100%;
+      flex-grow: 0;
+    }
+
+    .iban-display {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    #copy-btn {
+      margin-top: 0.5rem;
+      align-self: flex-end;
+    }
+}
