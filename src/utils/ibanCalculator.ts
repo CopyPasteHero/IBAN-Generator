@@ -295,14 +295,8 @@ export function generateIBAN(country: string, bankInfo?: Bank | null): string | 
   try {
     switch (country) {
       case "NL":
-        bankCodePart =
-          bbanBankCode || generateRandomChars(spec.bankCodeLength, spec.bankCodeType);
-        accountPart = generateRandomChars(spec.accountLength, spec.accountType);
-        break;
       case "DE":
-        bankCodePart =
-          bbanBankCode || generateRandomChars(spec.bankCodeLength, spec.bankCodeType);
-        accountPart = generateRandomChars(spec.accountLength, spec.accountType);
+        ({ bankCodePart, accountPart } = generateBankAndAccountParts(spec, bbanBankCode));
         break;
       case "BE":
         bankCodePart =
