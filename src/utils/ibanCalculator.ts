@@ -1,4 +1,6 @@
 // TypeScript types for IBAN generation
+import { logger } from './logger';
+
 export interface IbanSpec {
   length: number;
   bankCodeLength: number;
@@ -157,9 +159,7 @@ export function getSuggestedCountry(): string {
     if (baseLang === "es" && IBAN_SPECS["ES"]) return "ES";
     if (baseLang === "it" && IBAN_SPECS["IT"]) return "IT";
   } catch (e) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn("Could not access navigator.language:", e);
-    }
+    logger.warn("Could not access navigator.language:", e);
   }
   return "NL";
 }
@@ -189,9 +189,7 @@ export function generateRandomChars(length: number, type: string = "numeric"): s
       chars = numeric;
       break;
     default:
-      if (process.env.NODE_ENV === 'development') {
-        console.warn(`Unknown type '${type}', using numeric.`);
-      }
+      logger.warn(`Unknown type '${type}', using numeric.`);
       chars = numeric;
       break;
   }
@@ -204,9 +202,7 @@ export function generateRandomChars(length: number, type: string = "numeric"): s
       result += chars[randomValues[i] % chars.length];
     }
   } else {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn("Using fallback Math.random().");
-    }
+    logger.warn("Using fallback Math.random().");
     for (let i = 0; i < length; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
@@ -255,9 +251,7 @@ export function calculateIBANCheckDigits(iban: string): string | null {
 // Calculate Mod97 check (without BigInt)
 export function calculateMod97Check(numericString: string): string {
   if (!numericString || !/^\d+$/.test(numericString)) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`Invalid Mod97 input: ${numericString}`);
-    }
+    logger.warn(`Invalid Mod97 input: ${numericString}`);
     return "00";
   }
 
@@ -366,11 +360,9 @@ export function generateIBAN(country: string, bankInfo?: Bank | null): string | 
   const expectedBbanLength = spec.length - 4;
 
   if (bban.length !== expectedBbanLength) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(
-        `Adjusting BBAN length for ${country}: expected ${expectedBbanLength}, got ${bban.length}.`
-      );
-    }
+    logger.warn(
+      `Adjusting BBAN length for ${country}: expected ${expectedBbanLength}, got ${bban.length}.`
+    );
     bban =
       bban.length < expectedBbanLength
         ? bban.padEnd(expectedBbanLength, "0")
