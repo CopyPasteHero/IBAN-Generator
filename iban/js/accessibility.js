@@ -45,6 +45,9 @@ class AccessibilityAnnouncerClass {
         this.element.textContent = message;
 
         // Clear after screen readers process it
+        if (this.clearTimer) {
+          clearTimeout(this.clearTimer);
+        }
         this.clearTimer = setTimeout(() => {
           if (this.element) {
             this.element.textContent = "";
