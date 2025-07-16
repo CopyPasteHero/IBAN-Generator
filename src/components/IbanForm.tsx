@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import CountrySelector from './CountrySelector';
 import BankSelector from './BankSelector';
 import IbanResult from './IbanResult';
@@ -24,12 +24,22 @@ const IbanForm: React.FC = () => {
   const [result, setResult] = useState<{iban?: string; ibans?: string[]}>({});
   const [isResultVisible, setIsResultVisible] = useState<boolean>(false);
 
+  const updateBankSelection = useCallback((country: string) => {
+    const banksForCountry = BANK_DATA[country];
+    if (banksForCountry && Object.keys(banksForCountry).length > 0) {
+      const firstBankBic = Object.keys(banksForCountry)[0];
+      setSelectedBankBic(firstBankBic);
+    } else {
+      setSelectedBankBic('');
+    }
+  }, []);
+
   // Initialize with suggested country
   useEffect(() => {
     const suggestedCountry = getSuggestedCountry();
     setSelectedCountry(suggestedCountry);
     updateBankSelection(suggestedCountry);
-  }, []);
+  }, [updateBankSelection]);
 
   // Handle scroll to results when they become visible
   useEffect(() => {
@@ -44,16 +54,6 @@ const IbanForm: React.FC = () => {
       return () => clearTimeout(timeoutId);
     }
   }, [isResultVisible]);
-
-  const updateBankSelection = (country: string) => {
-    const banksForCountry = BANK_DATA[country];
-    if (banksForCountry && Object.keys(banksForCountry).length > 0) {
-      const firstBankBic = Object.keys(banksForCountry)[0];
-      setSelectedBankBic(firstBankBic);
-    } else {
-      setSelectedBankBic('');
-    }
-  };
 
   const handleCountryChange = (country: string) => {
     setSelectedCountry(country);
