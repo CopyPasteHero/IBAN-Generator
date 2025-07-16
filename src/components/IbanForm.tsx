@@ -31,6 +31,20 @@ const IbanForm: React.FC = () => {
     updateBankSelection(suggestedCountry);
   }, []);
 
+  // Handle scroll to results when they become visible
+  useEffect(() => {
+    if (isResultVisible) {
+      const timeoutId = setTimeout(() => {
+        const resultSection = document.querySelector('[data-result-section]');
+        if (resultSection) {
+          resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isResultVisible]);
+
   const updateBankSelection = (country: string) => {
     const banksForCountry = BANK_DATA[country];
     if (banksForCountry && Object.keys(banksForCountry).length > 0) {
@@ -126,20 +140,6 @@ const IbanForm: React.FC = () => {
         showError('country', `Failed to generate any IBANs for ${selectedCountry}.`);
       }
     }
-
-    // Scroll to results
-    useEffect(() => {
-      if (isResultVisible) {
-        const timeoutId = setTimeout(() => {
-          const resultSection = document.querySelector('[data-result-section]');
-          if (resultSection) {
-            resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }, 100);
-
-        return () => clearTimeout(timeoutId);
-      }
-    }, [isResultVisible]);
   };
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { IBAN_SPECS, COUNTRY_NAMES } from '../utils/ibanCalculator';
 
 interface CountrySelectorProps {
@@ -15,7 +15,7 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({
   const sortedCountries = useMemo(() => 
     Object.keys(IBAN_SPECS).sort((a, b) =>
       (COUNTRY_NAMES[a] || a).localeCompare(COUNTRY_NAMES[b] || b)
-    ), [IBAN_SPECS, COUNTRY_NAMES]);
+    ), []);
 
   return (
     <div className="mb-6">

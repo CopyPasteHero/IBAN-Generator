@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { BANK_DATA, COUNTRY_NAMES } from '../utils/ibanCalculator';
 
 interface BankSelectorProps {
@@ -17,16 +17,16 @@ const BankSelector: React.FC<BankSelectorProps> = ({
   const banksForCountry = BANK_DATA[selectedCountry];
   const isVisible = banksForCountry && Object.keys(banksForCountry).length > 0;
 
+  const sortedBanks = useMemo(() => 
+    banksForCountry ? Object.entries(banksForCountry).sort((a, b) =>
+      (a[1].name || a[0]).localeCompare(b[1].name || b[0])
+    ) : [], 
+    [banksForCountry]
+  );
+
   if (!isVisible) {
     return null;
   }
-
-  const sortedBanks = useMemo(() => 
-    Object.entries(banksForCountry).sort((a, b) =>
-      (a[1].name || a[0]).localeCompare(b[1].name || b[0])
-    ), 
-    [banksForCountry]
-  );
 
   return (
     <div className="mb-6">

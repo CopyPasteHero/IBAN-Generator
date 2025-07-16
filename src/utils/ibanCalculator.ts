@@ -150,12 +150,16 @@ export function getSuggestedCountry(): string {
     if (baseLang === "nl" && IBAN_SPECS["NL"]) return "NL";
     if (baseLang === "de" && IBAN_SPECS["DE"]) return "DE";
     if (baseLang === "fr") {
-      return getFrenchSuggestedCountry(lang);
+      if ((lang.includes("be") || lang.includes("bru")) && IBAN_SPECS["BE"]) return "BE";
+      if (IBAN_SPECS["FR"]) return "FR";
+      if (IBAN_SPECS["BE"]) return "BE";
     }
     if (baseLang === "es" && IBAN_SPECS["ES"]) return "ES";
     if (baseLang === "it" && IBAN_SPECS["IT"]) return "IT";
   } catch (e) {
-    console.warn("Could not access navigator.language:", e);
+    if (process.env.NODE_ENV === 'development') {
+      console.warn("Could not access navigator.language:", e);
+    }
   }
   return "NL";
 }
@@ -186,7 +190,9 @@ export function generateRandomChars(length: number, type: string = "numeric"): s
       chars = numeric;
       break;
     default:
-      console.warn(`Unknown type '${type}', using numeric.`);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`Unknown type '${type}', using numeric.`);
+      }
       chars = numeric;
       break;
   }
@@ -250,7 +256,9 @@ export function calculateIBANCheckDigits(iban: string): string | null {
 // Calculate Mod97 check (without BigInt)
 export function calculateMod97Check(numericString: string): string {
   if (!numericString || !/^\d+$/.test(numericString)) {
-    console.warn(`Invalid Mod97 input: ${numericString}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`Invalid Mod97 input: ${numericString}`);
+    }
     return "00";
   }
 
@@ -359,9 +367,11 @@ export function generateIBAN(country: string, bankInfo?: Bank | null): string | 
   const expectedBbanLength = spec.length - 4;
 
   if (bban.length !== expectedBbanLength) {
-    console.warn(
-      `Adjusting BBAN length for ${country}: expected ${expectedBbanLength}, got ${bban.length}.`
-    );
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        `Adjusting BBAN length for ${country}: expected ${expectedBbanLength}, got ${bban.length}.`
+      );
+    }
     bban =
       bban.length < expectedBbanLength
         ? bban.padEnd(expectedBbanLength, "0")
