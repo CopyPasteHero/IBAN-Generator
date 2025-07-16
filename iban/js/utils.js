@@ -174,17 +174,22 @@ export function sanitizeInput(input) {
     return '';
   }
   
-  // Remove HTML tags and encode special characters
-  return input
-    .replace(/<[^>]*>/g, '') // Remove HTML tags
-    .replace(/[<>&"']/g, (char) => {
-      const entities = {
-        '<': '&lt;',
-        '>': '&gt;',
-        '&': '&amp;',
-        '"': '&quot;',
-        "'": '&#x27;'
-      };
-      return entities[char] || char;
-    });
+  // Remove HTML tags iteratively and encode special characters
+  let sanitizedInput = input;
+  let previousInput;
+  do {
+    previousInput = sanitizedInput;
+    sanitizedInput = sanitizedInput.replace(/<[^>]*>/g, ''); // Remove HTML tags
+  } while (sanitizedInput !== previousInput);
+  
+  return sanitizedInput.replace(/[<>&"']/g, (char) => {
+    const entities = {
+      '<': '&lt;',
+      '>': '&gt;',
+      '&': '&amp;',
+      '"': '&quot;',
+      "'": '&#x27;'
+    };
+    return entities[char] || char;
+  });
 }
