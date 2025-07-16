@@ -1,54 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // --- Utility Functions ---
-  /**
-   * Debounce function to limit rapid function calls
-   * @param {Function} func - Function to debounce  
-   * @param {number} wait - Wait time in milliseconds
-   * @returns {Function} Debounced function
-   */
-  function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  }
-
-  /**
-   * Sanitize user input to prevent XSS and other issues
-   * @param {string} input - Input to sanitize
-   * @returns {string} Sanitized input
-   */
-  function sanitizeInput(input) {
-    if (typeof input !== 'string') {
-      return '';
-    }
-    return input.replace(/<[^>]*>/g, '').replace(/[<>&"']/g, (char) => {
-      const entities = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#x27;' };
-      return entities[char] || char;
-    });
-  }
-
-  /**
-   * Log error with additional context for debugging
-   * @param {Error} error - The error to log
-   * @param {string} context - Additional context
-   */
-  function logError(error, context = '') {
-    const errorDetails = {
-      message: error.message,
-      name: error.name,
-      stack: error.stack,
-      context
-    };
-    console.error('IBAN Generator Error:', errorDetails);
-  }
-
-  // --- Accessibility Announcer Singleton (Fixed Memory Management) ---
+  // --- Accessibility Announcer Singleton ---
   const AccessibilityAnnouncer = {
     element: null,
     timer: null,
@@ -74,16 +25,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       this.timer = setTimeout(() => {
-        if (this.element) {
-          this.element.textContent = message;
+        this.element.textContent = message;
 
-          // Clear after screen readers process it
-          this.clearTimer = setTimeout(() => {
-            if (this.element) {
-              this.element.textContent = "";
-            }
-          }, 3000);
-        }
+        // Clear after screen readers process it
+        this.clearTimer = setTimeout(() => {
+          this.element.textContent = "";
+        }, 3000);
       }, delay);
     },
 
@@ -103,42 +50,33 @@ document.addEventListener("DOMContentLoaded", function () {
     },
   };
 
-  // --- DOM Elements Cache (Performance Optimization) ---
-  const domCache = {};
-  function getElementById(id) {
-    if (!domCache[id]) {
-      domCache[id] = document.getElementById(id);
-    }
-    return domCache[id];
-  }
-
-  // --- DOM Elements (With Caching) ---
-  const ibanForm = getElementById("iban-form");
-  const countrySelect = getElementById("country");
-  const bankContainer = getElementById("bank-container");
-  const bankSelect = getElementById("bank");
-  const quantityInput = getElementById("quantity");
+  // --- DOM Elements ---
+  const ibanForm = document.getElementById("iban-form");
+  const countrySelect = document.getElementById("country");
+  const bankContainer = document.getElementById("bank-container");
+  const bankSelect = document.getElementById("bank");
+  const quantityInput = document.getElementById("quantity");
 
   // Result Sections
-  const resultSection = getElementById("result-section");
-  const singleResultContainer = getElementById("single-result-container");
-  const bulkResultContainer = getElementById("bulk-result-container");
+  const resultSection = document.getElementById("result-section");
+  const singleResultContainer = document.getElementById("single-result-container");
+  const bulkResultContainer = document.getElementById("bulk-result-container");
 
   // Single Result Elements
-  const ibanResultSpan = getElementById("iban-result");
-  const copyBtn = getElementById("copy-btn");
-  const copyMessage = getElementById("copy-message");
+  const ibanResultSpan = document.getElementById("iban-result");
+  const copyBtn = document.getElementById("copy-btn");
+  const copyMessage = document.getElementById("copy-message");
 
   // Bulk Result Elements
-  const bulkCountSpan = getElementById("bulk-count");
-  const bulkIbansTextarea = getElementById("bulk-ibans");
-  const downloadBulkBtn = getElementById("download-bulk");
-  const bulkHeading = getElementById("bulk-heading");
+  const bulkCountSpan = document.getElementById("bulk-count");
+  const bulkIbansTextarea = document.getElementById("bulk-ibans");
+  const downloadBulkBtn = document.getElementById("download-bulk");
+  const bulkHeading = document.getElementById("bulk-heading");
 
   // Error Message Elements
-  const countryError = getElementById("country-error");
-  const bankError = getElementById("bank-error");
-  const quantityError = getElementById("quantity-error");
+  const countryError = document.getElementById("country-error");
+  const bankError = document.getElementById("bank-error");
+  const quantityError = document.getElementById("quantity-error");
 
   // --- Configuration ---
   const IBAN_SPECS = {
@@ -277,16 +215,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const sortedCountries = Object.keys(IBAN_SPECS).sort((a, b) =>
       (COUNTRY_NAMES[a] || a).localeCompare(COUNTRY_NAMES[b] || b)
     );
-    
-    // Use DocumentFragment for better performance
-    const fragment = document.createDocumentFragment();
     sortedCountries.forEach((countryCode) => {
       const option = document.createElement("option");
       option.value = countryCode;
       option.textContent = COUNTRY_NAMES[countryCode] || countryCode;
-      fragment.appendChild(option);
+      countrySelect.appendChild(option);
     });
-    countrySelect.appendChild(fragment);
   }
 
   function updateBankSelector() {
@@ -300,23 +234,19 @@ document.addEventListener("DOMContentLoaded", function () {
       const sortedBanks = Object.entries(banksForCountryData).sort((a, b) =>
         (a[1].name || a[0]).localeCompare(b[1].name || b[0])
       );
-      
-      // Use DocumentFragment for better performance
-      const fragment = document.createDocumentFragment();
       let isFirstBank = true;
 
       for (const [bic, bank] of sortedBanks) {
         const option = document.createElement("option");
         option.value = bic;
         option.textContent = bank.name || bic;
+        bankSelect.appendChild(option);
         if (isFirstBank) {
           option.selected = true;
           isFirstBank = false;
         }
-        fragment.appendChild(option);
       }
-      
-      bankSelect.appendChild(fragment);
+
       bankContainer.classList.remove("hidden");
       bankSelect.disabled = false;
       if (helpTextEl)
@@ -357,63 +287,28 @@ document.addEventListener("DOMContentLoaded", function () {
     clearResults();
     clearAllErrors();
 
-    // Sanitize inputs
-    const country = sanitizeInput(countrySelect.value);
-    const quantityValue = sanitizeInput(quantityInput.value);
-    const quantity = parseInt(quantityValue, 10);
+    const country = countrySelect.value;
+    const quantity = parseInt(quantityInput.value, 10);
     const bankCodeInfo = getSelectedBankInfo();
 
-    // Enhanced validation with better error messages
     if (!country || !IBAN_SPECS[country]) {
-      const errorMsg = "Please select a valid country.";
-      showError(countrySelect, countryError, errorMsg);
-      AccessibilityAnnouncer.announce(`Validation error: ${errorMsg}`);
+      showError(countrySelect, countryError, "Please select a valid country.");
       countrySelect.focus();
       return;
     }
 
     if (isNaN(quantity) || quantity < 1 || quantity > 100) {
-      const errorMsg = "Please enter a number between 1 and 100.";
-      showError(quantityInput, quantityError, errorMsg);
-      AccessibilityAnnouncer.announce(`Validation error: ${errorMsg}`);
+      showError(quantityInput, quantityError, "Please enter a number between 1 and 100.");
       quantityInput.focus();
       return;
     }
 
-    // Show loading state
-    const submitButton = event.target.querySelector('button[type="submit"]');
-    const originalText = submitButton?.textContent;
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = 'Generating...';
-    }
+    resultSection.classList.remove("hidden");
 
-    try {
-      resultSection.classList.remove("hidden");
-
-      if (quantity === 1) {
-        generateSingleIBAN(country, bankCodeInfo);
-      } else {
-        generateBulkIBANs(country, bankCodeInfo, quantity);
-      }
-
-      // Announce success
-      const countryName = COUNTRY_NAMES[country] || country;
-      const message = quantity === 1 
-        ? `Generated 1 IBAN for ${countryName}` 
-        : `Generated ${quantity} IBANs for ${countryName}`;
-      AccessibilityAnnouncer.announce(message);
-
-    } catch (error) {
-      logError(error, 'Form submission');
-      const errorMsg = `Failed to generate IBAN for ${COUNTRY_NAMES[country] || country}. Please try again.`;
-      showError(ibanForm, countryError, errorMsg);
-    } finally {
-      // Restore submit button
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = originalText || 'Generate IBAN(s)';
-      }
+    if (quantity === 1) {
+      generateSingleIBAN(country, bankCodeInfo);
+    } else {
+      generateBulkIBANs(country, bankCodeInfo, quantity);
     }
 
     if (
@@ -427,67 +322,57 @@ document.addEventListener("DOMContentLoaded", function () {
   function handleCopyClick() {
     const ibanRaw = ibanResultSpan.textContent.replace(/\s/g, "");
 
-    if (!ibanRaw) {
-      console.warn("No IBAN to copy");
-      return;
-    }
+    if (!navigator.clipboard) {
+      console.warn("Clipboard API unavailable.");
+      // Fallback approach
+      try {
+        const tempInput = document.createElement("textarea");
+        tempInput.value = ibanRaw;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
 
-    // Modern clipboard API with fallback
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard
-        .writeText(ibanRaw)
-        .then(() => {
-          showCopyMessage("Copied!");
-          AccessibilityAnnouncer.announce("IBAN copied to clipboard");
-        })
-        .catch((err) => {
-          console.error("Clipboard API failed:", err);
-          fallbackCopy(ibanRaw);
-        });
-    } else {
-      fallbackCopy(ibanRaw);
-    }
-  }
+        copyMessage.textContent = "Copied!";
+        copyMessage.classList.remove("hidden");
+        copyMessage.setAttribute("role", "status");
 
-  function fallbackCopy(text) {
-    try {
-      const tempInput = document.createElement("textarea");
-      tempInput.value = text;
-      tempInput.style.position = "fixed";
-      tempInput.style.left = "-9999px";
-      tempInput.setAttribute("readonly", "");
-      document.body.appendChild(tempInput);
-      
-      tempInput.select();
-      tempInput.setSelectionRange(0, 99999); // For mobile devices
-      
-      const successful = document.execCommand("copy");
-      document.body.removeChild(tempInput);
-      
-      if (successful) {
-        showCopyMessage("Copied!");
-        AccessibilityAnnouncer.announce("IBAN copied to clipboard");
-      } else {
-        showCopyMessage("Copy failed. Please copy manually.");
+        setTimeout(() => {
+          copyMessage.textContent = "";
+          copyMessage.classList.add("hidden");
+          copyMessage.removeAttribute("role");
+        }, 3000);
+        return;
+      } catch (err) {
+        copyMessage.textContent = "Clipboard API unavailable";
+        copyMessage.classList.remove("hidden");
+        return;
       }
-    } catch (err) {
-      console.error("Fallback copy failed:", err);
-      showCopyMessage("Copy not supported. Please copy manually.");
     }
-  }
 
-  function showCopyMessage(message) {
-    if (!copyMessage) return;
-    
-    copyMessage.textContent = message;
-    copyMessage.classList.remove("hidden");
-    copyMessage.setAttribute("role", "status");
+    navigator.clipboard
+      .writeText(ibanRaw)
+      .then(() => {
+        copyMessage.textContent = "Copied!";
+        copyMessage.classList.remove("hidden");
+        copyMessage.setAttribute("role", "status");
 
-    setTimeout(() => {
-      copyMessage.textContent = "";
-      copyMessage.classList.add("hidden");
-      copyMessage.removeAttribute("role");
-    }, 3000);
+        setTimeout(() => {
+          copyMessage.textContent = "";
+          copyMessage.classList.add("hidden");
+          copyMessage.removeAttribute("role");
+        }, 3000);
+      })
+      .catch((err) => {
+        console.error("Copy failed:", err);
+        copyMessage.textContent = "Copy failed";
+        copyMessage.classList.remove("hidden");
+
+        setTimeout(() => {
+          copyMessage.textContent = "";
+          copyMessage.classList.add("hidden");
+        }, 3000);
+      });
   }
 
   function handleDownloadBulkClick() {
@@ -868,34 +753,11 @@ document.addEventListener("DOMContentLoaded", function () {
     clearError(ibanForm, quantityError);
   }
 
-  // --- Event Listeners with Cleanup Tracking ---
-  const eventListeners = [];
-  
-  function addEventListenerWithCleanup(element, event, handler) {
-    element.addEventListener(event, handler);
-    eventListeners.push({ element, event, handler });
-  }
-
-  // --- Debounced Input Validation ---
-  const debouncedQuantityValidation = debounce(function(value) {
-    const quantity = parseInt(value, 10);
-    clearError(quantityInput, quantityError);
-    
-    if (value && (isNaN(quantity) || quantity < 1 || quantity > 100)) {
-      const errorMsg = 'Please enter a number between 1 and 100';
-      showError(quantityInput, quantityError, errorMsg);
-      AccessibilityAnnouncer.announce(`Validation error: ${errorMsg}`);
-    }
-  }, 300);
-
   // --- Event Listeners ---
-  addEventListenerWithCleanup(countrySelect, "change", handleCountryChange);
-  addEventListenerWithCleanup(quantityInput, "input", function(event) {
-    debouncedQuantityValidation(event.target.value);
-  });
-  addEventListenerWithCleanup(ibanForm, "submit", handleFormSubmit);
-  addEventListenerWithCleanup(copyBtn, "click", handleCopyClick);
-  if (downloadBulkBtn) addEventListenerWithCleanup(downloadBulkBtn, "click", handleDownloadBulkClick);
+  countrySelect.addEventListener("change", handleCountryChange);
+  ibanForm.addEventListener("submit", handleFormSubmit);
+  copyBtn.addEventListener("click", handleCopyClick);
+  if (downloadBulkBtn) downloadBulkBtn.addEventListener("click", handleDownloadBulkClick);
 
   // --- Initialization ---
   populateCountrySelect();
@@ -906,29 +768,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   updateBankSelector();
 
-  // --- Cleanup Function ---
-  function cleanup() {
-    // Clean up accessibility announcer
-    AccessibilityAnnouncer.cleanup();
-    
-    // Remove all tracked event listeners
-    eventListeners.forEach(({ element, event, handler }) => {
-      try {
-        element.removeEventListener(event, handler);
-      } catch (e) {
-        console.warn('Failed to remove event listener:', e);
-      }
-    });
-    
-    // Clear DOM cache
-    Object.keys(domCache).forEach(key => delete domCache[key]);
-    
-    console.log('IBAN Generator cleaned up');
-  }
-
   // --- Cleanup on page unload ---
-  addEventListenerWithCleanup(window, "beforeunload", cleanup);
-  
-  // Make cleanup available globally for manual cleanup if needed
-  window.ibanGeneratorCleanup = cleanup;
+  window.addEventListener("beforeunload", function () {
+    AccessibilityAnnouncer.cleanup();
+  });
 });
