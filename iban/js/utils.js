@@ -170,8 +170,12 @@ export function debounce(func, wait) {
  * @returns {string} Sanitized input
  */
 export function sanitizeInput(input) {
-  if (typeof input !== 'string') {
+  if (input == null) { // Handle null or undefined inputs
     return '';
+  }
+  
+  if (typeof input !== 'string') {
+    input = String(input); // Convert non-string inputs to strings
   }
   
   // Remove HTML tags iteratively and encode special characters
