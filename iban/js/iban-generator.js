@@ -189,10 +189,6 @@ export function calculateIBANCheckDigits(iban) {
   }
 
   try {
-    if (!/^\d+$/.test(numerical)) {
-      throw new Error("Non-digit characters found after conversion");
-    }
-
     // Handle large numbers safely without BigInt
     let remainder = 0;
     for (let i = 0; i < numerical.length; i++) {
