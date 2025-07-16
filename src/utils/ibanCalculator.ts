@@ -182,7 +182,6 @@ export function generateRandomChars(length: number, type: string = "numeric"): s
       break;
     case "alphanumericupper":
     case "alphanumeric":
-    case "c":
       chars = alphanumericUpper;
       break;
     case "numeric":
