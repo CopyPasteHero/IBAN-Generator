@@ -1,16 +1,22 @@
 // TypeScript types for IBAN generation
 import { logger } from './logger';
 
+// Define string literal union types for type safety
+type BankCodeType = "alphaUpper" | "numeric";
+type AccountType = "numeric" | "alphanumericUpper";
+type BranchCodeType = "numeric";
+type NationalCheckType = "numeric" | "alphaUpper";
+
 export interface IbanSpec {
   length: number;
   bankCodeLength: number;
   accountLength: number;
-  bankCodeType: string;
-  accountType: string;
+  bankCodeType: BankCodeType;
+  accountType: AccountType;
   branchCodeLength?: number;
-  branchCodeType?: string;
+  branchCodeType?: BranchCodeType;
   nationalCheckLength?: number;
-  nationalCheckType?: string;
+  nationalCheckType?: NationalCheckType;
 }
 
 export interface Bank {
