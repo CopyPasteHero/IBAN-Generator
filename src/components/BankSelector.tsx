@@ -21,8 +21,11 @@ const BankSelector: React.FC<BankSelectorProps> = ({
     return null;
   }
 
-  const sortedBanks = Object.entries(banksForCountry).sort((a, b) =>
-    (a[1].name || a[0]).localeCompare(b[1].name || b[0])
+  const sortedBanks = useMemo(() => 
+    Object.entries(banksForCountry).sort((a, b) =>
+      (a[1].name || a[0]).localeCompare(b[1].name || b[0])
+    ), 
+    [banksForCountry]
   );
 
   return (
