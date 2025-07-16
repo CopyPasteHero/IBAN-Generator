@@ -19,6 +19,7 @@ const IbanResult: React.FC<IbanResultProps> = ({ iban, ibans, quantity, isVisibl
       }
     };
   }, [copyMessageTimeout]);
+  
   if (!isVisible) {
     return null;
   }
