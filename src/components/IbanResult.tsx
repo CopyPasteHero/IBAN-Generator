@@ -12,6 +12,13 @@ const IbanResult: React.FC<IbanResultProps> = ({ iban, ibans, quantity, isVisibl
   const [copyMessage, setCopyMessage] = useState<string>('');
   const [copyMessageTimeout, setCopyMessageTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
 
+  React.useEffect(() => {
+    return () => {
+      if (copyMessageTimeout) {
+        clearTimeout(copyMessageTimeout);
+      }
+    };
+  }, [copyMessageTimeout]);
   if (!isVisible) {
     return null;
   }
