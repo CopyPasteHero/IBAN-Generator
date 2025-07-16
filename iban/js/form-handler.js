@@ -161,29 +161,23 @@ export class FormHandler {
    * @private
    */
   async generateSingleIBAN(country, bankCodeInfo) {
-    return new Promise((resolve, reject) => {
-      // Use setTimeout to make generation async and allow UI updates
-      setTimeout(() => {
-        try {
-          const iban = generateIBAN(country, bankCodeInfo);
-          
-          if (iban) {
-            const formattedIban = formatIBANForDisplay(iban);
-            displaySingleIBAN(formattedIban, this.elements);
-            clearError(this.elements.ibanForm, this.elements.countryError);
-            resolve(iban);
-          } else {
-            const error = new IBANGenerationError(
-              `Failed to generate IBAN for ${COUNTRY_NAMES[country] || country}`,
-              country
-            );
-            reject(error);
-          }
-        } catch (error) {
-          reject(error);
-        }
-      }, 0);
-    });
+    try {
+      const iban = generateIBAN(country, bankCodeInfo);
+      
+      if (iban) {
+        const formattedIban = formatIBANForDisplay(iban);
+        displaySingleIBAN(formattedIban, this.elements);
+        clearError(this.elements.ibanForm, this.elements.countryError);
+        return iban;
+      } else {
+        throw new IBANGenerationError(
+          `Failed to generate IBAN for ${COUNTRY_NAMES[country] || country}`,
+          country
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
