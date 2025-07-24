@@ -381,8 +381,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
+      // Sanitize filename: only allow letters, numbers, hyphens, and underscores
+      const country = countrySelect.value.replace(/[^a-zA-Z0-9_-]/g, "_");
+      const count = bulkCountSpan.textContent.replace(/[^a-zA-Z0-9_-]/g, "_");
       link.href = url;
-      link.download = `iban-results-${countrySelect.value}-${bulkCountSpan.textContent}.txt`;
+      link.download = `iban-results-${country}-${count}.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
