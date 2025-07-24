@@ -381,11 +381,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      // Sanitize filename: only allow letters, numbers, hyphens, and underscores
-      const country = countrySelect.value.replace(/[^a-zA-Z0-9_-]/g, "_");
-      const count = bulkCountSpan.textContent.replace(/[^a-zA-Z0-9_-]/g, "_");
+      // Properly validate and sanitize filename components
+      const country = IBAN_SPECS[countrySelect.value] ? countrySelect.value : "UNKNOWN";
+      const count = parseInt(bulkCountSpan.textContent, 10) || 0;
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, "-");
       link.href = url;
-      link.download = `iban-results-${country}-${count}.txt`;
+      link.download = `iban-results-${country}-${count}-${timestamp}.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -682,7 +683,9 @@ document.addEventListener("DOMContentLoaded", function () {
         remainder = (remainder * 10 + parseInt(numericString[i])) % 97;
       }
 
-      if (remainder === 0) remainder = 97;
+      // Calculate check digits so that (original number + check digits) mod 97 = 0
+      remainder = 98 - remainder;
+      if (remainder === 98) remainder = 0;
       return remainder < 10 ? `0${remainder}` : `${remainder}`;
     } catch (e) {
       console.error("Error Mod97 check:", e);
