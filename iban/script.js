@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const AccessibilityAnnouncer = {
     element: null,
     timer: null,
+    clearTimer: null, // ensure this is initialized
+    DEBOUNCE_DELAY: 400, // (1) Add a default debounce delay
 
     init() {
       if (!this.element) {
@@ -21,6 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (this.timer) {
         clearTimeout(this.timer);
       }
+      if (this.clearTimer) {
+        clearTimeout(this.clearTimer); // (2) Always clear previous clearTimer
+      }
 
       this.timer = setTimeout(() => {
         this.element.textContent = message;
@@ -34,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     cleanup() {
       if (this.timer) clearTimeout(this.timer);
+      if (this.clearTimer) clearTimeout(this.clearTimer); // (2) Clear clearTimer on cleanup
       if (this.element && this.element.parentNode) {
         this.element.parentNode.removeChild(this.element);
       }
@@ -201,7 +207,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function populateCountrySelect() {
-    countrySelect.innerHTML = "";
+    // countrySelect.innerHTML = "";
+    while (countrySelect.firstChild) countrySelect.removeChild(countrySelect.firstChild); // (3) Safer clearing
     const sortedCountries = Object.keys(IBAN_SPECS).sort((a, b) =>
       (COUNTRY_NAMES[a] || a).localeCompare(COUNTRY_NAMES[b] || b)
     );
@@ -218,7 +225,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const banksForCountryData = BANK_DATA[selectedCountry];
     const helpTextEl = document.getElementById("bank-help");
     const wasHidden = bankContainer.classList.contains("hidden");
-    bankSelect.innerHTML = "";
+    // bankSelect.innerHTML = "";
+    while (bankSelect.firstChild) bankSelect.removeChild(bankSelect.firstChild); // (3) Safer clearing
 
     if (banksForCountryData && Object.keys(banksForCountryData).length > 0) {
       const sortedBanks = Object.entries(banksForCountryData).sort((a, b) =>
