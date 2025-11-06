@@ -416,7 +416,7 @@ document.addEventListener("DOMContentLoaded", function () {
           copyMessage.removeAttribute("role");
         }, 3000);
         return;
-      } catch (err) {
+      } catch (_err) {
         copyMessage.textContent = "Clipboard API unavailable";
         copyMessage.classList.remove("hidden");
         return;
@@ -896,7 +896,7 @@ document.addEventListener("DOMContentLoaded", function () {
   populateCountrySelect();
   try {
     countrySelect.value = getSuggestedCountry();
-  } catch (e) {
+  } catch (_e) {
     if (countrySelect.options.length > 0) {
       countrySelect.selectedIndex = 0;
     }

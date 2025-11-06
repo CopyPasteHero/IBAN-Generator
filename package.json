@@ -2,6 +2,7 @@
   "name": "iban-generator",
   "version": "1.0.0",
   "description": "A fully client-side IBAN generator to create mathematically valid IBANs for multiple European countries",
+  "type": "module",
   "main": "iban/script.js",
   "scripts": {
     "lint": "eslint iban/*.js",
@@ -29,10 +30,10 @@
   },
   "homepage": "https://probeer.me/iban",
   "devDependencies": {
-    "eslint": "^8.57.0",
+    "eslint": "^9.39.1",
     "prettier": "^3.2.5"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 }

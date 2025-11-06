@@ -1,0 +1,47 @@
+export default [
+  {
+    files: ["iban/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        window: "readonly",
+        document: "readonly",
+        navigator: "readonly",
+        console: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        URL: "readonly",
+        Blob: "readonly",
+        Uint32Array: "readonly",
+      },
+    },
+    rules: {
+      indent: ["error", 2, { SwitchCase: 1 }],
+      "linebreak-style": ["error", "unix"],
+      quotes: ["error", "double", { avoidEscape: true }],
+      semi: ["error", "always"],
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      eqeqeq: ["error", "always"],
+      curly: ["error", "all"],
+      "brace-style": ["error", "1tbs"],
+      "comma-dangle": ["error", "always-multiline"],
+      "no-trailing-spaces": "error",
+      "space-before-function-paren": [
+        "error",
+        {
+          anonymous: "always",
+          named: "never",
+          asyncArrow: "always",
+        },
+      ],
+      "keyword-spacing": "error",
+      "space-infix-ops": "error",
+      "object-curly-spacing": ["error", "always"],
+      "array-bracket-spacing": ["error", "never"],
+      "computed-property-spacing": ["error", "never"],
+      "max-len": ["warn", { code: 100, ignoreUrls: true, ignoreStrings: true }],
+    },
+  },
+];
