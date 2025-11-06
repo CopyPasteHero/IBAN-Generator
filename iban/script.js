@@ -1,11 +1,25 @@
+/**
+ * IBAN Generator - Main Script
+ * Generates mathematically valid IBANs for multiple European countries
+ * @author CopyPasteHero
+ * @license MIT
+ */
+
 document.addEventListener("DOMContentLoaded", function () {
-  // --- Accessibility Announcer Singleton ---
+  /**
+   * Accessibility Announcer Singleton
+   * Provides screen reader announcements with debouncing
+   * @type {Object}
+   */
   const AccessibilityAnnouncer = {
     element: null,
     timer: null,
     clearTimer: null, // ensure this is initialized
     DEBOUNCE_DELAY: 400, // (1) Add a default debounce delay
 
+    /**
+     * Initialize the accessibility announcer element
+     */
     init() {
       if (!this.element) {
         this.element = document.createElement("div");
@@ -16,6 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     },
 
+    /**
+     * Announce a message to screen readers
+     * @param {string} message - The message to announce
+     * @param {number} [delay=400] - Delay before announcing in milliseconds
+     */
     announce(message, delay = this.DEBOUNCE_DELAY) {
       this.init();
 
@@ -37,6 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }, delay);
     },
 
+    /**
+     * Clean up timers and remove announcer element
+     */
     cleanup() {
       if (this.timer) {
         clearTimeout(this.timer);
@@ -78,7 +100,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const bankError = document.getElementById("bank-error");
   const quantityError = document.getElementById("quantity-error");
 
-  // --- Configuration ---
+  /**
+   * IBAN specifications for each supported country
+   * Defines the structure and validation rules for each country's IBAN format
+   * @type {Object.<string, Object>}
+   */
   const IBAN_SPECS = {
     NL: {
       length: 18,
@@ -137,6 +163,11 @@ document.addEventListener("DOMContentLoaded", function () {
       accountType: "alphanumericUpper",
     },
   };
+
+  /**
+   * Human-readable country names mapped to country codes
+   * @type {Object.<string, string>}
+   */
   const COUNTRY_NAMES = {
     NL: "Netherlands",
     DE: "Germany",
@@ -145,6 +176,11 @@ document.addEventListener("DOMContentLoaded", function () {
     ES: "Spain",
     IT: "Italy",
   };
+
+  /**
+   * Bank data for each country including bank names and codes
+   * @type {Object.<string, Object>}
+   */
   const BANK_DATA = {
     NL: {
       ABNA: { name: "ABN AMRO", code: "ABNA" },
@@ -190,7 +226,10 @@ document.addEventListener("DOMContentLoaded", function () {
     },
   };
 
-  // --- Helper Functions ---
+  /**
+   * Get suggested country based on user's browser language
+   * @returns {string} Suggested country code (defaults to "NL" if no match)
+   */
   function getSuggestedCountry() {
     try {
       const lang = navigator.language.toLowerCase();
@@ -224,6 +263,9 @@ document.addEventListener("DOMContentLoaded", function () {
     return "NL";
   }
 
+  /**
+   * Populate the country select dropdown with sorted country options
+   */
   function populateCountrySelect() {
     // countrySelect.innerHTML = "";
     while (countrySelect.firstChild) {
@@ -240,6 +282,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  /**
+   * Update the bank selector based on the selected country
+   * Shows/hides bank selector and populates it with banks for the selected country
+   */
   function updateBankSelector() {
     const selectedCountry = countrySelect.value;
     const banksForCountryData = BANK_DATA[selectedCountry];
@@ -489,6 +535,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Get the selected bank information from the bank selector
+   * @returns {Object|null} Bank information object or null if not selected
+   */
   function getSelectedBankInfo() {
     if (bankContainer.classList.contains("hidden") || !bankSelect.value) {
       return null;
@@ -500,6 +550,12 @@ document.addEventListener("DOMContentLoaded", function () {
       : null;
   }
 
+  /**
+   * Generate a single valid IBAN for the specified country
+   * @param {string} country - Country code (e.g., "NL", "DE", "BE")
+   * @param {Object|null} bankInfo - Optional bank information object
+   * @returns {string|null} Generated IBAN string or null if generation fails
+   */
   function generateIBAN(country, bankInfo) {
     const spec = IBAN_SPECS[country];
 
@@ -614,6 +670,14 @@ document.addEventListener("DOMContentLoaded", function () {
     return `${country}${checkDigits}${bban}`;
   }
 
+  /**
+   * Generate random characters of specified length and type
+   * Uses cryptographically secure random number generation when available
+   * @param {number} length - Number of characters to generate
+   * @param {string} [type="numeric"] - Type of characters
+   *   ("numeric", "alphaUpper", "alphanumericUpper")
+   * @returns {string} Generated random string
+   */
   function generateRandomChars(length, type = "numeric") {
     if (length <= 0) {
       return "";
@@ -664,7 +728,12 @@ document.addEventListener("DOMContentLoaded", function () {
     return result;
   }
 
-  // Modified to avoid BigInt
+  /**
+   * Calculate IBAN check digits using the mod-97 algorithm
+   * Does not use BigInt for better browser compatibility
+   * @param {string} iban - IBAN string with temporary check digits (e.g., "NL00...")
+   * @returns {string|null} Two-digit check code or null if calculation fails
+   */
   function calculateIBANCheckDigits(iban) {
     const rearranged = iban.substring(4) + iban.substring(0, 4);
     let numerical = "";
@@ -701,7 +770,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Modified to avoid BigInt
+  /**
+   * Calculate mod-97 check for national check digits (used in BE IBANs)
+   * Does not use BigInt for better browser compatibility
+   * @param {string} numericString - Numeric string to calculate check for
+   * @returns {string} Two-digit check code (defaults to "00" or "99" on error)
+   */
   function calculateMod97Check(numericString) {
     if (!numericString || !/^\d+$/.test(numericString)) {
       console.warn(`Invalid Mod97 input: ${numericString}`);
@@ -725,11 +799,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Format an IBAN string with spaces every 4 characters for readability
+   * @param {string} iban - Unformatted IBAN string
+   * @returns {string} Formatted IBAN with spaces
+   */
   function formatIBAN(iban) {
     return typeof iban === "string" ? iban.replace(/(.{4})/g, "$1 ").trim() : "";
   }
 
-  // --- UI Functions ---
+  /**
+   * Clear all result displays and reset UI
+   */
   function clearResults() {
     singleResultContainer.classList.add("hidden");
     bulkResultContainer.classList.add("hidden");
@@ -741,6 +822,12 @@ document.addEventListener("DOMContentLoaded", function () {
     bulkHeading.textContent = "Generated IBANs (0)";
   }
 
+  /**
+   * Show an error message for a form input
+   * @param {HTMLElement} inputElement - The input element with the error
+   * @param {HTMLElement} errorElement - The error message element
+   * @param {string} message - The error message to display
+   */
   function showError(inputElement, errorElement, message) {
     if (errorElement && message) {
       errorElement.textContent = message;
@@ -757,6 +844,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Clear an error message for a form input
+   * @param {HTMLElement} inputElement - The input element to clear error from
+   * @param {HTMLElement} errorElement - The error message element to clear
+   */
   function clearError(inputElement, errorElement) {
     if (errorElement) {
       errorElement.textContent = "";
@@ -781,6 +873,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Clear all error messages from the form
+   */
   function clearAllErrors() {
     clearError(countrySelect, countryError);
     clearError(bankSelect, bankError);
