@@ -38,8 +38,12 @@ document.addEventListener("DOMContentLoaded", function () {
     },
 
     cleanup() {
-      if (this.timer) clearTimeout(this.timer);
-      if (this.clearTimer) clearTimeout(this.clearTimer); // (2) Clear clearTimer on cleanup
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      if (this.clearTimer) {
+        clearTimeout(this.clearTimer);
+      } // (2) Clear clearTimer on cleanup
       if (this.element && this.element.parentNode) {
         this.element.parentNode.removeChild(this.element);
       }
@@ -191,15 +195,29 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       const lang = navigator.language.toLowerCase();
       const baseLang = lang.split("-")[0];
-      if (baseLang === "nl" && IBAN_SPECS["NL"]) return "NL";
-      if (baseLang === "de" && IBAN_SPECS["DE"]) return "DE";
-      if (baseLang === "fr") {
-        if ((lang.includes("be") || lang.includes("bru")) && IBAN_SPECS["BE"]) return "BE";
-        if (IBAN_SPECS["FR"]) return "FR";
-        if (IBAN_SPECS["BE"]) return "BE";
+      if (baseLang === "nl" && IBAN_SPECS["NL"]) {
+        return "NL";
       }
-      if (baseLang === "es" && IBAN_SPECS["ES"]) return "ES";
-      if (baseLang === "it" && IBAN_SPECS["IT"]) return "IT";
+      if (baseLang === "de" && IBAN_SPECS["DE"]) {
+        return "DE";
+      }
+      if (baseLang === "fr") {
+        if ((lang.includes("be") || lang.includes("bru")) && IBAN_SPECS["BE"]) {
+          return "BE";
+        }
+        if (IBAN_SPECS["FR"]) {
+          return "FR";
+        }
+        if (IBAN_SPECS["BE"]) {
+          return "BE";
+        }
+      }
+      if (baseLang === "es" && IBAN_SPECS["ES"]) {
+        return "ES";
+      }
+      if (baseLang === "it" && IBAN_SPECS["IT"]) {
+        return "IT";
+      }
     } catch (e) {
       console.warn("Could not access navigator.language:", e);
     }
@@ -208,9 +226,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function populateCountrySelect() {
     // countrySelect.innerHTML = "";
-    while (countrySelect.firstChild) countrySelect.removeChild(countrySelect.firstChild); // (3) Safer clearing
+    while (countrySelect.firstChild) {
+      countrySelect.removeChild(countrySelect.firstChild);
+    } // (3) Safer clearing
     const sortedCountries = Object.keys(IBAN_SPECS).sort((a, b) =>
-      (COUNTRY_NAMES[a] || a).localeCompare(COUNTRY_NAMES[b] || b)
+      (COUNTRY_NAMES[a] || a).localeCompare(COUNTRY_NAMES[b] || b),
     );
     sortedCountries.forEach((countryCode) => {
       const option = document.createElement("option");
@@ -226,11 +246,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const helpTextEl = document.getElementById("bank-help");
     const wasHidden = bankContainer.classList.contains("hidden");
     // bankSelect.innerHTML = "";
-    while (bankSelect.firstChild) bankSelect.removeChild(bankSelect.firstChild); // (3) Safer clearing
+    while (bankSelect.firstChild) {
+      bankSelect.removeChild(bankSelect.firstChild);
+    } // (3) Safer clearing
 
     if (banksForCountryData && Object.keys(banksForCountryData).length > 0) {
       const sortedBanks = Object.entries(banksForCountryData).sort((a, b) =>
-        (a[1].name || a[0]).localeCompare(b[1].name || b[0])
+        (a[1].name || a[0]).localeCompare(b[1].name || b[0]),
       );
       let isFirstBank = true;
 
@@ -247,25 +269,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
       bankContainer.classList.remove("hidden");
       bankSelect.disabled = false;
-      if (helpTextEl)
-        helpTextEl.textContent = `Optional: Select a bank for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}.`;
+      if (helpTextEl) {
+        const countryName = COUNTRY_NAMES[selectedCountry] || selectedCountry;
+        helpTextEl.textContent = `Optional: Select a bank for ${countryName}.`;
+      }
 
       // Announce to screen readers when bank selector becomes available
       if (wasHidden) {
-        AccessibilityAnnouncer.announce(
-          `Bank selection is now available for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}.`
-        );
+        const countryName = COUNTRY_NAMES[selectedCountry] || selectedCountry;
+        AccessibilityAnnouncer.announce(`Bank selection is now available for ${countryName}.`);
       }
     } else {
       bankContainer.classList.add("hidden");
       bankSelect.disabled = true;
-      if (helpTextEl)
-        helpTextEl.textContent = `No specific banks available for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}. A random valid bank code will be used.`;
+      if (helpTextEl) {
+        const countryName = COUNTRY_NAMES[selectedCountry] || selectedCountry;
+        helpTextEl.textContent =
+          `No specific banks available for ${countryName}. ` +
+          "A random valid bank code will be used.";
+      }
 
       // Announce to screen readers when bank selector becomes unavailable
       if (!wasHidden) {
+        const countryName = COUNTRY_NAMES[selectedCountry] || selectedCountry;
         AccessibilityAnnouncer.announce(
-          `Bank selection is not needed for ${COUNTRY_NAMES[selectedCountry] || selectedCountry}. A random valid bank code will be used.`
+          `Bank selection is not needed for ${countryName}. ` +
+            "A random valid bank code will be used.",
         );
       }
     }
@@ -375,7 +404,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function handleDownloadBulkClick() {
     const text = bulkIbansTextarea.value;
-    if (!text || !downloadBulkBtn) return;
+    if (!text || !downloadBulkBtn) {
+      return;
+    }
 
     try {
       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
@@ -410,7 +441,7 @@ document.addEventListener("DOMContentLoaded", function () {
       showError(
         ibanForm,
         countryError,
-        `Failed to generate IBAN for ${COUNTRY_NAMES[country] || country}.`
+        `Failed to generate IBAN for ${COUNTRY_NAMES[country] || country}.`,
       );
     }
   }
@@ -443,7 +474,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showError(
           ibanForm,
           quantityError,
-          `Note: ${failures} out of ${quantity} IBANs could not be generated.`
+          `Note: ${failures} out of ${quantity} IBANs could not be generated.`,
         );
       } else {
         clearError(ibanForm, quantityError);
@@ -453,7 +484,7 @@ document.addEventListener("DOMContentLoaded", function () {
       showError(
         ibanForm,
         countryError,
-        `Failed to generate any IBANs for ${COUNTRY_NAMES[country] || country}.`
+        `Failed to generate any IBANs for ${COUNTRY_NAMES[country] || country}.`,
       );
     }
   }
@@ -559,7 +590,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (bban.length !== expectedBbanLength) {
       console.warn(
-        `Adjusting BBAN length for ${country}: expected ${expectedBbanLength}, got ${bban.length}.`
+        `Adjusting BBAN length for ${country}: expected ${expectedBbanLength}, got ${bban.length}.`,
       );
       bban =
         bban.length < expectedBbanLength
@@ -584,7 +615,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function generateRandomChars(length, type = "numeric") {
-    if (length <= 0) return "";
+    if (length <= 0) {
+      return "";
+    }
 
     let result = "";
     const alphaUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -682,7 +715,9 @@ document.addEventListener("DOMContentLoaded", function () {
         remainder = (remainder * 10 + parseInt(numericString[i])) % 97;
       }
 
-      if (remainder === 0) remainder = 97;
+      if (remainder === 0) {
+        remainder = 97;
+      }
       return remainder < 10 ? `0${remainder}` : `${remainder}`;
     } catch (e) {
       console.error("Error Mod97 check:", e);
@@ -703,7 +738,7 @@ document.addEventListener("DOMContentLoaded", function () {
     copyMessage.textContent = "";
     bulkIbansTextarea.value = "";
     bulkCountSpan.textContent = "0";
-    bulkHeading.textContent = `Generated IBANs (0)`;
+    bulkHeading.textContent = "Generated IBANs (0)";
   }
 
   function showError(inputElement, errorElement, message) {
@@ -758,14 +793,18 @@ document.addEventListener("DOMContentLoaded", function () {
   countrySelect.addEventListener("change", handleCountryChange);
   ibanForm.addEventListener("submit", handleFormSubmit);
   copyBtn.addEventListener("click", handleCopyClick);
-  if (downloadBulkBtn) downloadBulkBtn.addEventListener("click", handleDownloadBulkClick);
+  if (downloadBulkBtn) {
+    downloadBulkBtn.addEventListener("click", handleDownloadBulkClick);
+  }
 
   // --- Initialization ---
   populateCountrySelect();
   try {
     countrySelect.value = getSuggestedCountry();
   } catch (e) {
-    if (countrySelect.options.length > 0) countrySelect.selectedIndex = 0;
+    if (countrySelect.options.length > 0) {
+      countrySelect.selectedIndex = 0;
+    }
   }
   updateBankSelector();
 

@@ -8,6 +8,7 @@ a personal playground by CopyPasteHero for building tiny tools.
 ## 🛠️ Current Tool
 
 ### **IBAN Generator**
+
 A simple and accessible client-side tool to generate valid IBANs.
 
 - **Live demo**: [https://probeer.me/iban](https://probeer.me/iban)
@@ -18,18 +19,18 @@ A simple and accessible client-side tool to generate valid IBANs.
 
 ## 📦 Repo Structure
 
-- **/iban/** → IBAN Generator tool (self-contained)  
-- **/index.html** → Redirects to /iban  
-- **/CNAME** → Custom domain config (probeer.me)  
-- **/404.html** → Fallback page  
-- **/robots.txt** → SEO basics  
+- **/iban/** → IBAN Generator tool (self-contained)
+- **/index.html** → Redirects to /iban
+- **/CNAME** → Custom domain config (probeer.me)
+- **/404.html** → Fallback page
+- **/robots.txt** → SEO basics
 
 ---
 
 ## 🌍 Live Access
 
-- https://probeer.me  
-- https://probeer.me/iban  
+- https://probeer.me
+- https://probeer.me/iban
 
 ---
 
@@ -39,3 +40,4 @@ A simple and accessible client-side tool to generate valid IBANs.
 git clone https://github.com/CopyPasteHero/IBAN-Generator.git
 cd IBAN-Generator
 open iban/index.html
+```

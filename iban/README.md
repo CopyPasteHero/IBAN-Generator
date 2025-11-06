@@ -49,18 +49,18 @@ README.md       → You're reading it
 
 ## 📦 Repo Structure
 
-- **/iban/** → IBAN Generator tool (self-contained)  
-- **/index.html** → Redirects to /iban  
-- **/CNAME** → Custom domain config (probeer.me)  
-- **/404.html** → Fallback page  
-- **/robots.txt** → SEO basics  
+- **/iban/** → IBAN Generator tool (self-contained)
+- **/index.html** → Redirects to /iban
+- **/CNAME** → Custom domain config (probeer.me)
+- **/404.html** → Fallback page
+- **/robots.txt** → SEO basics
 
 ---
 
 ## 🌍 **Live Access**
 
 **https://probeer.me**  
-**https://probeer.me/iban**  
+**https://probeer.me/iban**
 
 ---
 
