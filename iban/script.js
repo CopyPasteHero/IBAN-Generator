@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const AccessibilityAnnouncer = {
     element: null,
     timer: null,
-    clearTimer: null, // ensure this is initialized
-    DEBOUNCE_DELAY: 400, // (1) Add a default debounce delay
+    clearTimer: null,
+    DEBOUNCE_DELAY: 400, // Default delay before announcing in milliseconds
 
     /**
      * Initialize the accessibility announcer element
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
         clearTimeout(this.timer);
       }
       if (this.clearTimer) {
-        clearTimeout(this.clearTimer); // (2) Always clear previous clearTimer
+        clearTimeout(this.clearTimer);
       }
 
       this.timer = setTimeout(() => {
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (this.clearTimer) {
         clearTimeout(this.clearTimer);
-      } // (2) Clear clearTimer on cleanup
+      }
       if (this.element && this.element.parentNode) {
         this.element.parentNode.removeChild(this.element);
       }
@@ -267,10 +267,10 @@ document.addEventListener("DOMContentLoaded", function () {
    * Populate the country select dropdown with sorted country options
    */
   function populateCountrySelect() {
-    // countrySelect.innerHTML = "";
+    // Clear all existing options safely
     while (countrySelect.firstChild) {
       countrySelect.removeChild(countrySelect.firstChild);
-    } // (3) Safer clearing
+    }
     const sortedCountries = Object.keys(IBAN_SPECS).sort((a, b) =>
       (COUNTRY_NAMES[a] || a).localeCompare(COUNTRY_NAMES[b] || b),
     );
@@ -291,10 +291,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const banksForCountryData = BANK_DATA[selectedCountry];
     const helpTextEl = document.getElementById("bank-help");
     const wasHidden = bankContainer.classList.contains("hidden");
-    // bankSelect.innerHTML = "";
+    // Clear all existing options safely
     while (bankSelect.firstChild) {
       bankSelect.removeChild(bankSelect.firstChild);
-    } // (3) Safer clearing
+    }
 
     if (banksForCountryData && Object.keys(banksForCountryData).length > 0) {
       const sortedBanks = Object.entries(banksForCountryData).sort((a, b) =>
